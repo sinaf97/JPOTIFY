@@ -5,6 +5,7 @@ import UI.JpotifyUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Library {
@@ -65,10 +66,15 @@ public class Library {
             mediaList.removeSong(exSong);
     }
 
-    public ArrayList<Media> searchSong(String name){
-        ArrayList<Media> result = new ArrayList<>();
-        for (Media m:songs)
-            if(m.getName().toLowerCase().contains(name.toLowerCase()))
+    public ArrayList<String> searchSong(String name){
+        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> sina = new ArrayList<>();
+        sina.add("ali");
+        sina.add("sina");
+        sina.add("masood");
+        sina.add("mamad");
+        for (String m:sina)
+            if(m.toLowerCase().contains(name.toLowerCase()))
                 result.add(m);
         return result;
     }
