@@ -18,6 +18,8 @@ public class JpotifyUI extends JFrame {
         this.user = user;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, screenSize.height);
         header = new Header(this);
         left = new Left(this);
         right = new Right(this);
@@ -28,7 +30,6 @@ public class JpotifyUI extends JFrame {
         add(main,BorderLayout.CENTER);
         add(right,BorderLayout.EAST);
         add(footer,BorderLayout.SOUTH);
-        setSize(500,300);
         setVisible(true);
     }
 

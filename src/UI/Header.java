@@ -1,6 +1,8 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
@@ -18,11 +20,12 @@ public class Header extends JPanel {
         super();
         this.jpotifyUI = jpotifyUI;
         setLayout(new BorderLayout());
-        JLabel username = new JLabel("username");
-        JTextField searchBox = new JTextField();
+        setBackground(Color.GRAY);
+        JLabel username = new JLabel("User: " + jpotifyUI.user.getName() );
+        username.setForeground(Color.white);
+        username.setBorder(new EmptyBorder(10,10,10,10));
         JLabel search = new JLabel("Search: ");
-
-
+        search.setForeground(Color.white);
         JComboBox cbo = new JComboBox();
         cbo.setEditable(true);
         cbo.setUI(new javax.swing.plaf.metal.MetalComboBoxUI(){
@@ -35,6 +38,7 @@ public class Header extends JPanel {
                 }
             }
         });
+
         cbo.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -72,7 +76,6 @@ public class Header extends JPanel {
                     String temp = (String) cbo.getEditor().getItem();
                     cbo.removeAllItems();
                     cbo.addItem(temp);
-                    System.out.println(temp);
                     for(String m:jpotifyUI.user.getLibrary().searchSong(temp))
                         cbo.addItem(m);
                     cbo.hidePopup();
@@ -87,7 +90,7 @@ public class Header extends JPanel {
                     here is when you choose a song of your search
                     heres the code you write to tell it what it should do
                  */
-                System.out.println(cbo.getSelectedItem());
+//                System.out.println(cbo.getSelectedItem());
             }
         });
 
@@ -95,10 +98,11 @@ public class Header extends JPanel {
 
         add(username,BorderLayout.WEST);
         JPanel searchArea = new JPanel();
-        searchArea.setLayout(new BorderLayout());
-        searchArea.add(search,BorderLayout.WEST);
-        searchArea.add(cbo,BorderLayout.CENTER);
-        add(searchArea,BorderLayout.CENTER);
+        searchArea.setBackground(Color.GRAY);
+        searchArea.setLayout(new FlowLayout());
+        searchArea.add(search);
+        searchArea.add(cbo);
+        add(searchArea,BorderLayout.EAST);
 
 
 
