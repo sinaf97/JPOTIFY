@@ -7,11 +7,11 @@ import java.awt.*;
 
 public class JpotifyUI extends JFrame {
     User user;
-    Header header = new Header();
-    Left left = new Left();
-    Right right = new Right();
-    Center main = new Center();
-    Footer footer= new Footer();
+    private Header header = new Header();
+    private Left left = new Left();
+    private Right right = new Right();
+    private Center main = new Center();
+    private Footer footer= new Footer();
 
     public JpotifyUI(User user){
         super();

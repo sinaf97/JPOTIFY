@@ -6,8 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Header extends JPanel {
+    private JpotifyUI jpotifyUI;
 
-    public Header(){
+    public Header(JpotifyUI jpotifyUI){
         super();
         setLayout(new BorderLayout());
         JLabel username = new JLabel("username");
@@ -19,7 +20,7 @@ public class Header extends JPanel {
         searchArea.add(search,BorderLayout.WEST);
         searchArea.add(searchBox,BorderLayout.CENTER);
         add(searchArea,BorderLayout.CENTER);
-
+        this.jpotifyUI = jpotifyUI;
 
         searchBox.addKeyListener(new KeyListener() {
             @Override
@@ -35,7 +36,7 @@ public class Header extends JPanel {
             @Override
             public void keyReleased(KeyEvent e) {
                 searchBox.getText();
-                user
+
             }
         });
     }
