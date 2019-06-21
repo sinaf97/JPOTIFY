@@ -28,8 +28,14 @@ public class Friend {
         send request to server for information
          */
 
+        for (User u:friendsList.values())
+            if(u.getOnline())
+                result.add(u);
+
         return result;
     }
 
-
+    public HashMap<String, User> getFriendsList() {
+        return friendsList;
+    }
 }

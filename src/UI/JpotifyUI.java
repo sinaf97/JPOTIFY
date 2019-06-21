@@ -1,9 +1,12 @@
 package UI;
 
 import Logic.User;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class JpotifyUI extends JFrame {
     User user;
@@ -13,7 +16,7 @@ public class JpotifyUI extends JFrame {
     private Center main;
     private Footer footer;
 
-    public JpotifyUI(User user){
+    public JpotifyUI(User user) throws InvalidDataException, IOException, UnsupportedTagException {
         super();
         this.user = user;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -25,6 +28,8 @@ public class JpotifyUI extends JFrame {
         right = new Right(this);
         main = new Center(this);
         footer= new Footer(this);
+
+        right.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().width/6.5),Toolkit.getDefaultToolkit().getScreenSize().height));
         add(header,BorderLayout.NORTH);
         add(left,BorderLayout.WEST);
         add(main,BorderLayout.CENTER);
