@@ -1,17 +1,22 @@
 package UI;
 
+import Logic.User;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class JpotifyUI extends JFrame {
-    private Header header = new Header();
-    private Left left = new Left();
-    private Right right = new Right();
-    private Center main = new Center();
-    private Footer footer= new Footer();
+    User user;
+    Header header = new Header();
+    Left left = new Left();
+    Right right = new Right();
+    Center main = new Center();
+    Footer footer= new Footer();
 
-    public JpotifyUI(){
+    public JpotifyUI(User user){
         super();
+        this.user = user;
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         header = new Header();
         left = new Left();
