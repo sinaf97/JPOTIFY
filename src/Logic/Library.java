@@ -8,13 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class Library holds all the records of songs and albums and playlists in it
+ */
+
 public class Library {
     User user;
     ArrayList<Media> songs;
     HashMap<String,Album> albums;
     HashMap<String,MediaList> playlists;
 
-    public Library(User user){
+    public Library(User user){ //Constructor
         this.user = user;
         this.playlists = new HashMap<>();
         this.songs = new ArrayList<>();
@@ -22,6 +26,11 @@ public class Library {
         this.playlists.put("Sharable Playlist",new SharablePlayList());
         this.playlists.put("Favorite Songs",new FavoriteSongs());
     }
+
+    /**
+     * adds a song to songs and album simoultaniusly if the song is new
+     * @param newSong
+     */
 
     public void addSong(Media newSong){
         if(!songs.contains(newSong))
@@ -38,6 +47,11 @@ public class Library {
         }
 
     }
+
+    /**
+     * removes a song from songs and album simoultaniusly if the song exists
+     * @param exsong
+     */
     public void removeSong(Media exsong){
         if(!songs.contains(exsong))
             return;
@@ -66,16 +80,17 @@ public class Library {
             mediaList.removeSong(exSong);
     }
 
+    /**
+     * finds songs which contains the string passed to it, ignoring upper or lowercase
+     * @param name
+     * @return list of matched songs names
+     */
+
     public ArrayList<String> searchSong(String name){
         ArrayList<String> result = new ArrayList<>();
-        ArrayList<String> sina = new ArrayList<>();
-        sina.add("ali");
-        sina.add("sina");
-        sina.add("masood");
-        sina.add("mamad");
-        for (String m:sina)
-            if(m.toLowerCase().contains(name.toLowerCase()))
-                result.add(m);
+        for (Media m:songs)
+            if(m.getName().toLowerCase().contains(name.toLowerCase()))
+                result.add(m.getName());
         return result;
     }
 

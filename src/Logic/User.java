@@ -1,5 +1,12 @@
 package Logic;
 import UI.JpotifyUI;
+import javazoom.jl.decoder.JavaLayerException;
+
+import java.io.FileNotFoundException;
+
+/**
+ * Class User is the identity of our client
+ */
 
 public class User {
     private String username;
@@ -9,13 +16,16 @@ public class User {
     private Status status;
     private Boolean online;
     private JpotifyUI ui;
+    private Player player;
 
-    public User(String username,String name){
+    public User(String username,String name) throws FileNotFoundException, InterruptedException, JavaLayerException { //Constructor
         this.username = username;
         this.name = name;
         friends = new Friend(this);
         library = new Library(this);
         online = true;
+        player = Player.getInstance(this);
+
     }
 
     public String getName() {
@@ -60,5 +70,9 @@ public class User {
 
     public void setUi(JpotifyUI ui) {
         this.ui = ui;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

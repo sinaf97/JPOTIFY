@@ -14,19 +14,13 @@ import java.io.InputStream;
 
 public class Footer extends JPanel {
     private JpotifyUI jpotifyUI;
-    private AdvancedPlayer player;
-    private InputStream audioIn;
+    private PlayerUI playerUI;
 
     public Footer(JpotifyUI jpotifyUI) {
         super();
         this.jpotifyUI = jpotifyUI;
-//        audioIn = new InputStream() {
-//            @Override
-//            public int read() throws IOException {
-//                return 0;
-//            }
-//        };
-//        player = new AdvancedPlayer(audioIn);
+        playerUI = new PlayerUI(jpotifyUI);
+        add(playerUI);
 
     }
 

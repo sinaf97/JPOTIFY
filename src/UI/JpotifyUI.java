@@ -57,4 +57,5 @@ public class JpotifyUI extends JFrame {
     public Right getRight() {
         return right;
     }
+
 }
