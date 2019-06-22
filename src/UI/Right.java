@@ -1,18 +1,14 @@
 package UI;
 
-import Logic.Media;
-import Logic.Status;
+
 import Logic.User;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.UnsupportedTagException;
+
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.TimeZone;
+import java.time.LocalTime;
 
 public class Right extends JPanel {
     private JpotifyUI jpotifyUI;
@@ -24,35 +20,59 @@ public class Right extends JPanel {
         super();
         this.jpotifyUI = jpotifyUI;
         setLayout(new GridLayout(2,1));
-        onlineFriends = new JPanel();
-        offlineFriends = new JPanel();
+        onlineFriends = getList("Online");
+        offlineFriends = getList("Offline");
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        add(getList("Online"));
-        add(getList("Offline"));
+        add(onlineFriends);
+        add(offlineFriends);
 
 
     }
 
-    private void fillOnlineFriends(){
+    private JPanel getList(String mode){
+        JPanel listFriends = new JPanel();
+        listFriends.setLayout(new GridBagLayout());
+        JPanel listJpanel = new JPanel();
+        listJpanel.setLayout(new BorderLayout());
+        JLabel online;
+        if(mode.equals("Online"))
+            online = new JLabel("Online Friends");
+        else
+            online = new JLabel("Offline Friends");
+        online.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        online.setBackground(Color.WHITE);
+        listJpanel.add(online,BorderLayout.NORTH);
+        if(mode.equals("Online"))
+            fillOnlineFriends(listFriends);
+        else
+            fillOfflineFriends(listFriends);
+        listJpanel.add(new JScrollPane(listFriends),BorderLayout.CENTER);
+        listFriends.setBackground(new Color(0,0,0));
+        return listJpanel;
+    }
+
+
+
+    private void fillOnlineFriends(JPanel listFriends){
         Constraint c = new Constraint();
         for(User u:jpotifyUI.user.getFriends().getOnlineFriends()) {
-            onlineFriends.add(makeFriend(u, true),c.c);
+            listFriends.add(makeFriend(u, true),c.c);
             c.increment();
         }
-        for(int i = 0;i<6;i++) {
-            onlineFriends.add(makeTrashFriend(), c.c);
+        for(int i = 0;i<7;i++) {
+            listFriends.add(makeTrashFriend(), c.c);
             c.increment();
         }
     }
-    private void fillOfflineFriends(){
+    private void fillOfflineFriends(JPanel listFriends){
         Constraint c = new Constraint();
         for(User u:jpotifyUI.user.getFriends().getFriendsList().values())
             if(!u.getOnline()) {
-                offlineFriends.add(makeFriend(u, false),c.c);
+                listFriends.add(makeFriend(u, false),c.c);
                 c.increment();
             }
-        for(int i = 0;i<6;i++) {
-            offlineFriends.add(makeTrashFriend(), c.c);
+        for(int i = 0;i<7;i++) {
+            listFriends.add(makeTrashFriend(), c.c);
             c.increment();
         }
     }
@@ -70,8 +90,11 @@ public class Right extends JPanel {
         JLabel status = new JLabel("Playing");
         if(u.getStatus().getStatus())
             status.setText("Playing");
-        else
-            status.setText("Last played at " + u.getStatus().getTime().toLocalDate().toString());
+        else {
+            LocalTime timeTemp =  LocalTime.ofSecondOfDay(LocalDateTime.now().getSecond() - u.getStatus().getTime().getSecond());
+            String lastTime = timeTemp.getHour()>0?timeTemp.getHour()+"h":timeTemp.getMinute()+"min";
+            status.setText("Last Played " + lastTime+ " ago");
+        }
         if(isOnline) {
             name.setForeground(new Color(30, 215, 96));
             lastPlayed.setForeground(Color.white);
@@ -95,9 +118,9 @@ public class Right extends JPanel {
         c.increment();
         temp.add(status,c.c);
         JLabel trash = new JLabel("&&&&&&&");
-        trash.setForeground(new Color(60,60,60));
+        trash.setForeground(new Color(0,0,0));
         temp.add(trash);
-        temp.setBackground(new Color(60,60,60));
+        temp.setBackground(new Color(0,0,0));
         temp.setBorder(BorderFactory.createLineBorder(Color.white,2));
         return temp;
     }
@@ -108,9 +131,9 @@ public class Right extends JPanel {
         JLabel name = new JLabel("s");
         JLabel lastPlayed = new JLabel("s");
         JLabel status = new JLabel("s");
-        name.setForeground(new Color(60,60,60));
-        lastPlayed.setForeground(new Color(60,60,60));
-        status.setForeground(new Color(60,60,60));
+        name.setForeground(new Color(0,0,0));
+        lastPlayed.setForeground(new Color(0,0,0));
+        status.setForeground(new Color(0,0,0));
         Constraint c = new Constraint();
         temp.add(name,c.c);
         c.increment();
@@ -119,34 +142,11 @@ public class Right extends JPanel {
         temp.add(status,c.c);
         JLabel trash = new JLabel("");
         temp.add(trash);
-        temp.setBackground(new Color(60,60,60));
+        temp.setBackground(new Color(0,0,0));
         return temp;
     }
 
-    private JPanel getList(String mode){
-        JPanel ListFriends = new JPanel();
-        ListFriends.setLayout(new GridBagLayout());
-        JPanel ListJpanel = new JPanel();
-        ListJpanel.setLayout(new BorderLayout());
-        JLabel online;
-        if(mode.equals("Online"))
-            online = new JLabel("Online Friends");
-        else
-            online = new JLabel("Offline Friends");
-        online.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        online.setBackground(Color.WHITE);
-        ListJpanel.add(online,BorderLayout.NORTH);
-        if(mode.equals("Online")) {
-            fillOnlineFriends();
-            ListJpanel.add(new JScrollPane(onlineFriends),BorderLayout.CENTER);
-        }
-        else {
-            fillOfflineFriends();
-            ListJpanel.add(new JScrollPane(offlineFriends),BorderLayout.CENTER);
-        }
-        ListFriends.setBackground(new Color(60,60,60));
-        return ListFriends;
-    }
+
 
 
     private class Constraint{

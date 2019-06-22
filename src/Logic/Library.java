@@ -78,4 +78,16 @@ public class Library {
                 result.add(m);
         return result;
     }
+
+    public ArrayList<Media> getSongs() {
+        return songs;
+    }
+
+    public HashMap<String, Album> getAlbums() {
+        return albums;
+    }
+
+    public HashMap<String, MediaList> getPlaylists() {
+        return playlists;
+    }
 }

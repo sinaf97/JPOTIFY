@@ -1,14 +1,17 @@
+import Logic.Player;
 import Logic.Status;
 import Logic.User;
 import Logic.Media;
 import UI.JpotifyUI;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import javazoom.jl.decoder.JavaLayerException;
+
 
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws InvalidDataException, IOException, UnsupportedTagException {
+    public static void main(String[] args) throws InvalidDataException, IOException, UnsupportedTagException, JavaLayerException, InterruptedException {
         User t1 = new User("sinaf97","Sina Farahani");
         User t2 = new User("mori","Mori Farahani");
         User t3 = new User("mahsa","Mahsa Farahani");
@@ -28,5 +31,9 @@ public class Main {
         t4.setStatus(new Status(song,false));
         t5.setStatus(new Status(song,true));
         new JpotifyUI(t1);
+        Player sina =  Player.getInstance();
+        sina.run();
+        sina.pouse();
+
     }
 }

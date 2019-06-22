@@ -9,13 +9,26 @@ public class Left extends JPanel {
     private JpotifyUI jpotifyUI;
 
     public Left(JpotifyUI jpotifyUI){
-//        super();
-//        setLayout(new GridLayout(2,1));
-//        library = new Library();
-//        playlist = new Playlist();
-//        add(library);
-//        add(playlist);
-//        this.jpotifyUI = jpotifyUI;
-//        setBackground(Color.YELLOW);
+        super();
+        BorderLayout layout = new BorderLayout();
+        layout.setVgap(10);
+        setLayout(layout);
+        library = new Library(jpotifyUI);
+        playlist = new Playlist(jpotifyUI);
+        add(library,BorderLayout.NORTH);
+        add(playlist);
+        setBackground(Color.GRAY);
+        this.jpotifyUI = jpotifyUI;
+    }
+
+    public static JLabel makeTitle(String title){
+        JLabel temp = new JLabel(title);
+        temp.setHorizontalAlignment(0);
+        temp.setFont(new Font(temp.getFont().getName(),Font.BOLD,15));
+        temp.setForeground(Color.white);
+        temp.setBackground(Color.black);
+        temp.setOpaque(true);
+        temp.setBorder(BorderFactory.createLineBorder(Color.black));
+        return temp;
     }
 }
