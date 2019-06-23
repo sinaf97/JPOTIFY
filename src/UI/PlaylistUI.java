@@ -1,14 +1,19 @@
 package UI;
 
 import Logic.MediaList;
+import javazoom.jl.decoder.JavaLayerException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
 
-public class Playlist extends JPanel {
+public class PlaylistUI extends JPanel {
     private JpotifyUI jpotifyUI;
 
-    public Playlist(JpotifyUI jpotifyUI){
+    public PlaylistUI(JpotifyUI jpotifyUI){
         super();
         this.jpotifyUI = jpotifyUI;
         setLayout(new BorderLayout());
@@ -44,10 +49,24 @@ public class Playlist extends JPanel {
     }
 
     private JButton makeAddButton() {
-        JButton temp = new JButton("Add Playlist");
-        /*
-        implement action listener here
-         */
+        JButton temp = new JButton("Add PlaylistUI");
+        JFileChooser chooser = new JFileChooser();
+        temp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooser.showDialog(chooser,"Open");
+                try {
+                    jpotifyUI.user.getPlayer().changeSong(chooser.getSelectedFile().getAbsolutePath());
+
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                } catch (JavaLayerException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         return temp;
     }
 

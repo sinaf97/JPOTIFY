@@ -11,52 +11,58 @@ import java.io.FileNotFoundException;
 
 public class PlayerUI extends JPanel {
     private JpotifyUI jpotifyUI;
+    String dir;
+    ImageIcon playIcon;
+    ImageIcon pauseIcon;
+    Player sina;
 
-    public PlayerUI(JpotifyUI jpotifyUI){
+    public PlayerUI(JpotifyUI jpotifyUI) throws FileNotFoundException, InterruptedException, JavaLayerException {
         super();
         this.jpotifyUI = jpotifyUI;
-        setLayout(new GridBagLayout());
-        JButton play = new JButton("Play");
-        JButton pause = new JButton("Pause");
+        initPlayer(null);
+    }
+
+    public void initPlayer(String dir) throws FileNotFoundException, InterruptedException, JavaLayerException {
+        removeAll();
+        this.dir = dir;
+        sina = Player.getInstance(jpotifyUI.user);
+        if(dir!=null)
+            sina.play(dir);
+//        playIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/play.png", "Play");
+//        pauseIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/pause.png", "Play");
+        setLayout(new BorderLayout());
+        JButton play = new JButton("Pause");
         JButton next = new JButton("Next");
         JButton previous = new JButton("Previous");
+//        play.setPreferredSize(new Dimension(50,50));
+//        play.setIcon(playIcon);
         play.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Player sina = Player.getInstance(jpotifyUI.user);
-                    sina.play();
-                } catch (JavaLayerException e1) {
-                    e1.printStackTrace();
-                } catch (FileNotFoundException e1) {
-                    e1.printStackTrace();
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                if(play.getText().equals("Pause")) {
+                    play.setText("Play");
+                    sina.pause();
                 }
-            }
-        });
-        pause.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jpotifyUI.user.getPlayer().pause();
-            }
-        });
-        next.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    jpotifyUI.user.getPlayer().play();
-                } catch (JavaLayerException e1) {
-                    e1.printStackTrace();
-                } catch (FileNotFoundException e1) {
-                    e1.printStackTrace();
+                else {
+                    play.setText("Pause");
+                    try {
+                        sina.play(dir);
+                    } catch (JavaLayerException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
 
-        add(play);
-        add(pause);
-        add(next);
+        JToolBar temp = new JToolBar();
+        temp.add(previous);
+        temp.add(play);
+        temp.add(next);
+        add(temp);
+        updateUI();
+    }
 
+    public Player getSina() {
+        return sina;
     }
 }

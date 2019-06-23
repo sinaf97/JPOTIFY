@@ -20,7 +20,7 @@ public class Library {
         this.playlists = new HashMap<>();
         this.songs = new ArrayList<>();
         this.albums = new HashMap<>();
-        this.playlists.put("Sharable Playlist",new SharablePlayList());
+        this.playlists.put("Sharable PlaylistUI",new SharablePlayList());
         this.playlists.put("Favorite Songs",new FavoriteSongs());
     }
 
@@ -56,7 +56,7 @@ public class Library {
             if(entry.getValue().songExists(exsong))
                 entry.getValue().removeSong(exsong);
         for (Map.Entry<String, MediaList> entry : playlists.entrySet())
-            if(!entry.getKey().equals("Sharable Playlist") && entry.getValue().songExists(exsong))
+            if(!entry.getKey().equals("Sharable PlaylistUI") && entry.getValue().songExists(exsong))
                 entry.getValue().removeSong(exsong);
         songs.remove(exsong);
     }

@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Left extends JPanel {
     private Library library;
-    private Playlist playlist;
+    private PlaylistUI playlist;
     private JpotifyUI jpotifyUI;
 
     public Left(JpotifyUI jpotifyUI){
@@ -14,7 +14,7 @@ public class Left extends JPanel {
         layout.setVgap(10);
         setLayout(layout);
         library = new Library(jpotifyUI);
-        playlist = new Playlist(jpotifyUI);
+        playlist = new PlaylistUI(jpotifyUI);
         add(library,BorderLayout.NORTH);
         add(playlist);
         setBackground(Color.GRAY);

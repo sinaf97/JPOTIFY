@@ -9,6 +9,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,7 +17,7 @@ public class Footer extends JPanel {
     private JpotifyUI jpotifyUI;
     private PlayerUI playerUI;
 
-    public Footer(JpotifyUI jpotifyUI) {
+    public Footer(JpotifyUI jpotifyUI) throws FileNotFoundException, InterruptedException, JavaLayerException {
         super();
         this.jpotifyUI = jpotifyUI;
         playerUI = new PlayerUI(jpotifyUI);
@@ -24,8 +25,7 @@ public class Footer extends JPanel {
 
     }
 
-
-
-
-
+    public PlayerUI getPlayerUI() {
+        return playerUI;
+    }
 }

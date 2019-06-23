@@ -4,7 +4,7 @@ package Logic;
 public class SharablePlayList extends CustomPlayList {
 
     public SharablePlayList(){
-        super("Sharable Playlist");
+        super("Sharable PlaylistUI");
     }
 
     @Override

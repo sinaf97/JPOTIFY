@@ -31,7 +31,7 @@ public class Main {
         t3.setStatus(new Status(song,false));
         t4.setStatus(new Status(song,false));
         t5.setStatus(new Status(song,true));
-        new JpotifyUI(t1);
+        t1.setUi( new JpotifyUI(t1));
 
     }
 }

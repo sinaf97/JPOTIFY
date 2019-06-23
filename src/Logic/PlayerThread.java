@@ -2,8 +2,6 @@ package Logic;
 
 import com.mpatric.mp3agic.Mp3File;
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import javazoom.jl.player.PlayerApplet;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 
 import java.io.File;
@@ -17,17 +15,20 @@ public class PlayerThread extends Thread  implements Runnable{
     private int position = 0;
     private static int lastPosition;
     private boolean goOn = false;
+    private String dir;
 
 
 
-    public PlayerThread() throws JavaLayerException {
+    public PlayerThread(String dir) throws JavaLayerException {
         super();
+        this.dir = dir;
         self = this;
         playing = true;
     }
 
-    public PlayerThread(int position) throws JavaLayerException {
+    public PlayerThread(int position,String dir) throws JavaLayerException {
         super();
+        this.dir = dir;
         self = this;
         playing = true;
         this.position = position;
@@ -36,11 +37,10 @@ public class PlayerThread extends Thread  implements Runnable{
     @Override
     public void run() {
         try {
-            File temp = new File("/Users/sinafarahani/Desktop/sina.mp3");
-            Mp3File temp1 = new Mp3File("/Users/sinafarahani/Desktop/sina.mp3");
+            File temp = new File(dir);
+            Mp3File temp1 = new Mp3File(dir);
             int sampleRate = temp1.getFrameCount();
             double time = temp1.getLengthInSeconds();
-            System.out.println(temp1.getStartOffset() + " " + time);
             FileInputStream input = null;
             input = new FileInputStream(temp);
             player = new AdvancedPlayer(input);
@@ -48,7 +48,6 @@ public class PlayerThread extends Thread  implements Runnable{
                 player.play();
             else {
                 try {
-                    System.out.println(position+lastPosition);
                     player.play((int) (position*sampleRate/(time*1000)), 130000);
                 }catch (Exception e){
                     System.out.println(e);
@@ -61,10 +60,7 @@ public class PlayerThread extends Thread  implements Runnable{
     }
     public int pause() throws InterruptedException {
         int temp = player.getPosition();
-        System.out.println("temp is: "+temp);
         temp += lastPosition;
-        System.out.println("now temp is: "+temp);
-        System.out.println("last position is: "+lastPosition);
         lastPosition = temp;
         player.close();
         goOn = true;
@@ -74,7 +70,11 @@ public class PlayerThread extends Thread  implements Runnable{
         start();
     }
 
-//    public static PlayerThread getInstance() throws JavaLayerException {
+    public String getDir() {
+        return dir;
+    }
+
+    //    public static PlayerThread getInstance() throws JavaLayerException {
 //        if(self == null)
 //            return new PlayerThread();
 //        return self;

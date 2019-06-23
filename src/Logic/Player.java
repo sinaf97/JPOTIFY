@@ -46,21 +46,19 @@ public class Player implements Singleton, PlayerLogic{
         });
     }
     @Override
-    public void play() throws JavaLayerException, FileNotFoundException {
-//        loadSong(user.getLibrary().getSongs().get(0));
-//        playing = true;
-//        player.play(44100);
-//        System.out.println("start playing");
+    public void play(String dir) throws JavaLayerException{
         if(thread == null) {
             if(position == 0) {
-                thread = new PlayerThread();
+                thread = new PlayerThread(dir);
                 thread.start();
             }
             else{
-                thread = new PlayerThread(position);
+                thread = new PlayerThread(position,dir);
                 thread.start();
             }
         }
+        else
+            pause();
     }
 
     @Override
@@ -71,6 +69,19 @@ public class Player implements Singleton, PlayerLogic{
         }catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    public void closeAll() {
+        position = 0;
+        try {
+            thread.player.close();
+        }catch (Exception e){}
+        thread = null;
+    }
+
+    public void changeSong(String dir) throws FileNotFoundException, InterruptedException, JavaLayerException {
+        closeAll();
+        user.getUi().getFooter().getPlayerUI().initPlayer(dir);
     }
 
     @Override
@@ -144,5 +155,13 @@ public class Player implements Singleton, PlayerLogic{
 
     public AdvancedPlayer getPlayer() {
         return player;
+    }
+
+    public PlayerThread getThread() {
+        return thread;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

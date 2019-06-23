@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 
 public interface PlayerLogic {
     public void loadSong(Media song) throws Exception;
-    public void play() throws Exception;
+    public void play(String dir) throws Exception;
     public void pause();
     public void fastForward();
     public void fastBackward();
