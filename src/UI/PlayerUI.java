@@ -24,8 +24,8 @@ public class PlayerUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    new Player(jpotifyUI.user).play();
-                    System.out.println("out here");
+                    Player sina = Player.getInstance(jpotifyUI.user);
+                    sina.play();
                 } catch (JavaLayerException e1) {
                     e1.printStackTrace();
                 } catch (FileNotFoundException e1) {
@@ -41,9 +41,22 @@ public class PlayerUI extends JPanel {
                 jpotifyUI.user.getPlayer().pause();
             }
         });
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jpotifyUI.user.getPlayer().play();
+                } catch (JavaLayerException e1) {
+                    e1.printStackTrace();
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
 
         add(play);
         add(pause);
+        add(next);
 
     }
 }

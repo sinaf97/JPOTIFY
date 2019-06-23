@@ -136,6 +136,23 @@ public class Player
 		}
 		return ret;
 	}
+
+
+	public boolean skipFrame() throws JavaLayerException
+	{
+		Header h = bitstream.readFrame();
+		if (h == null) return false;
+		bitstream.closeFrame();
+		return true;
+	}
+
+	public boolean play(final int start, final int end) throws JavaLayerException
+	{
+		boolean ret = true;
+		int offset = start;
+		while (offset-- > 0 && ret) ret = skipFrame();
+		return play(end - start);
+	}
 		
 	/**
 	 * Cloases this player. Any audio currently playing is stopped

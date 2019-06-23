@@ -12,52 +12,22 @@ import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 
-public class Player extends Thread implements PlayerLogic{
+public class Player implements Singleton, PlayerLogic{
     private static Player self = null;
     private User user;
     private AdvancedPlayer player;
     private FileInputStream input;
+    private PlayerThread thread;
     private boolean playing;
+    private int position;
 
 
-    public Player(User user) throws FileNotFoundException, JavaLayerException, InterruptedException {
-        super();
+    private Player(User user) throws FileNotFoundException, JavaLayerException, InterruptedException {
         this.user = user;
         self = this;
-        playing = false;
 
     }
 
-    public void run(){
-        File temp = new File("/Users/sinafarahani/Desktop/sina.mp3");
-        Media temp1 = null;
-        try {
-            temp1 = new Media("/Users/sinafarahani/Desktop/sina.mp3");
-            user.getLibrary().addSong(temp1);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidDataException e) {
-            e.printStackTrace();
-        } catch (UnsupportedTagException e) {
-            e.printStackTrace();
-        }
-        try {
-            input = new FileInputStream(temp);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            player = new AdvancedPlayer(input);
-        } catch (JavaLayerException e) {
-            e.printStackTrace();
-        }
-        try {
-            player.play(44100);
-        } catch (JavaLayerException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -77,15 +47,30 @@ public class Player extends Thread implements PlayerLogic{
     }
     @Override
     public void play() throws JavaLayerException, FileNotFoundException {
-        loadSong(user.getLibrary().getSongs().get(0));
-        playing = true;
-        player.play(44100);
-        System.out.println("start playing");
+//        loadSong(user.getLibrary().getSongs().get(0));
+//        playing = true;
+//        player.play(44100);
+//        System.out.println("start playing");
+        if(thread == null) {
+            if(position == 0) {
+                thread = new PlayerThread();
+                thread.start();
+            }
+            else{
+                thread = new PlayerThread(position);
+                thread.start();
+            }
+        }
     }
 
     @Override
     public void pause() {
-        playing = false;
+        try {
+            position = thread.pause();
+            thread = null;
+        }catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     @Override
