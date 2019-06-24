@@ -1,8 +1,18 @@
 package UI;
 
+import Logic.Media;
+import UI.centerElements.SongsUI;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import javazoom.jl.decoder.JavaLayerException;
+
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Library extends JPanel {
     private JpotifyUI jpotifyUI;
@@ -44,17 +54,29 @@ public class Library extends JPanel {
 
     private JButton makeAddButton() {
         JButton temp = new JButton("Add To Library");
-        /*
-        implement action listener here
-         */
-        return temp;
-    }
+            JFileChooser chooser = new JFileChooser();
+            temp.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    chooser.showDialog(chooser, "Open");
+                    try {
+                        jpotifyUI.user.getLibrary().addSong(new Media(chooser.getSelectedFile().getAbsolutePath()));
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                }});
+            return temp;
+        }
 
     private JButton makeSongsButton() {
         JButton temp = new JButton("Songs");
-        /*
-        implement action listener here
-         */
+        temp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jpotifyUI.getMain().removeAll();
+                jpotifyUI.getMain().add(new SongsUI(jpotifyUI));
+            }
+        });
         return temp;
     }
 

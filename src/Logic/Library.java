@@ -86,8 +86,10 @@ public class Library {
     public ArrayList<String> searchSong(String name){
         ArrayList<String> result = new ArrayList<>();
         for (Media m:songs)
-            if(m.getName().toLowerCase().contains(name.toLowerCase()))
-                result.add(m.getName());
+            try {
+                if (m.getName().toLowerCase().contains(name.toLowerCase()))
+                    result.add(m.getName());
+            }catch (Exception e){}
         return result;
     }
 
