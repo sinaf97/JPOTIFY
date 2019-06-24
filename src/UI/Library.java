@@ -1,6 +1,7 @@
 package UI;
 
 import Logic.Media;
+import UI.centerElements.AlbumsUI;
 import UI.centerElements.SongsUI;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -74,6 +75,7 @@ public class Library extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jpotifyUI.getMain().removeAll();
+                jpotifyUI.getMain().setLayout(new FlowLayout());
                 jpotifyUI.getMain().add(new SongsUI(jpotifyUI));
             }
         });
@@ -82,9 +84,13 @@ public class Library extends JPanel {
 
     private JButton makeAlbumsButton() {
         JButton temp = new JButton("Albums");
-        /*
-        implement action listener here
-         */
+        temp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jpotifyUI.getMain().removeAll();
+                jpotifyUI.getMain().add(new AlbumsUI(jpotifyUI));
+            }
+        });
         return temp;
     }
 

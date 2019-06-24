@@ -15,6 +15,7 @@ public class Media {
     private String artist;
     private String album;
     private byte[] artWork;
+    private Boolean favorite;
     private static byte[] defaultArtWork;
 
     public Media(String dir) throws IOException, InvalidDataException, UnsupportedTagException {
@@ -44,6 +45,7 @@ public class Media {
 
         }
         checkFields(song);
+        favorite = false;
 
 }
     static{
@@ -79,5 +81,13 @@ public class Media {
         if(album == null)
             album = "Unknown";
 
+    }
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
     }
 }

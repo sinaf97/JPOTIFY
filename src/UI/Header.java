@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 import Logic.Media;
+import UI.centerElements.SongsUI;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -24,8 +26,7 @@ public class Header extends JPanel {
         JLabel username = new JLabel("User: " + jpotifyUI.user.getName() );
         username.setForeground(Color.white);
         username.setBorder(new EmptyBorder(10,10,10,10));
-        JLabel search = new JLabel("Search: ");
-        search.setForeground(Color.white);
+
         JComboBox cbo = new JComboBox();
         cbo.setEditable(true);
         cbo.setUI(new javax.swing.plaf.metal.MetalComboBoxUI(){
@@ -84,13 +85,20 @@ public class Header extends JPanel {
             }
         });
 
-        cbo.addActionListener (new ActionListener() {
+        JButton searchButton = new JButton("Search");
+
+
+
+        searchButton.addActionListener(new ActionListener() {
+
+            @Override
             public void actionPerformed(ActionEvent e) {
-                /*
-                    here is when you choose a song of your search
-                    heres the code you write to tell it what it should do
-                 */
-//                System.out.println(cbo.getSelectedItem());
+                if(cbo.getEditor().getItem().equals(""))
+                    return;
+                System.out.println("in");
+                jpotifyUI.getMain().removeAll();
+                jpotifyUI.getMain().add(new SongsUI(jpotifyUI,jpotifyUI.getUser().getLibrary().getSearchSongResult((String)cbo.getEditor().getItem())));
+                jpotifyUI.getMain().updateUI();
             }
         });
 
@@ -100,7 +108,7 @@ public class Header extends JPanel {
         JPanel searchArea = new JPanel();
         searchArea.setBackground(Color.GRAY);
         searchArea.setLayout(new FlowLayout());
-        searchArea.add(search);
+        searchArea.add(searchButton);
         searchArea.add(cbo);
         add(searchArea,BorderLayout.EAST);
 
