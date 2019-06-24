@@ -11,7 +11,13 @@ import javazoom.jl.player.advanced.PlaybackListener;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * implement logic of the player
+ *
+ * @author  Sina Farahani, MohammadReza Ghoreighi
+ * @version 1.0
+ * @since   2019-05-01
+ */
 public class Player implements Singleton, PlayerLogic{
     private static Player self = null;
     private User user;
@@ -21,15 +27,29 @@ public class Player implements Singleton, PlayerLogic{
     private boolean playing;
     private int position;
 
-
+    /**
+     *
+     * @param user
+     * @throws FileNotFoundException
+     * @throws JavaLayerException
+     * @throws InterruptedException
+     */
     private Player(User user) throws FileNotFoundException, JavaLayerException, InterruptedException {
         this.user = user;
         self = this;
+        String s = new String();
+
 
     }
 
 
-
+    /**
+     *
+     *
+     * @param song
+     * @throws FileNotFoundException
+     * @throws JavaLayerException
+     */
     @Override
     public void loadSong(Media song) throws FileNotFoundException, JavaLayerException {
         File temp = new File(song.getDir());
