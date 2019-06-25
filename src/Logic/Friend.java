@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Friend {
     private User user;
-    private HashMap<String,User> friendsList;
+    private HashMap<String,User> friendsList; //String: userName, User
 
 
     public Friend(User user){
