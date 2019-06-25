@@ -126,9 +126,13 @@ public class JpotifyManagerRunnable implements Runnable{
                 return s;
             }
             case "Upload": {
-                s = uploadManager();
                 User user2 = findUser(command2);
-                return s;
+                if(uploadManager(in)) {
+                    return "Process done successfully.";
+                } else {
+                    return "Process is not successfully";
+                }
+
             }
             case "SharedList": {
                 switch (command2) {
@@ -184,7 +188,7 @@ public class JpotifyManagerRunnable implements Runnable{
 
     }
 
-    private void uploadManager() {
+    private Boolean uploadManager(BufferedReader in) {
         File file = new File("Mohammad(socket).txt");
         FileOutputStream inMyComputer = null;
 
@@ -197,19 +201,25 @@ public class JpotifyManagerRunnable implements Runnable{
 
 //                out.write(-1);
             int c;
-            while ((c = in.read()) != '\0') {
-                inMyComputer.write((char)c);
+            try {
+                while ((c = in.read()) != '\0') {
+                    inMyComputer.write((char) c);
+                    return true;
+                }
+            } catch (IOException io) {
+                io.printStackTrace();
             }
-
         } finally {
-            if (inMyComputer != null) {
-                inMyComputer.close();
+            try {
+                if (inMyComputer != null) {
+                    inMyComputer.close();
+                }
+            }
+            catch (IOException io) {
+                io.printStackTrace();
             }
         }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return false;
     }
     
 }
