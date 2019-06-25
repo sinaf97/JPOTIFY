@@ -14,20 +14,20 @@ public class PlayerUI extends JPanel {
     String dir;
     ImageIcon playIcon;
     ImageIcon pauseIcon;
-    Player sina;
+    Player player;
 
     public PlayerUI(JpotifyUI jpotifyUI) throws FileNotFoundException, InterruptedException, JavaLayerException {
         super();
         this.jpotifyUI = jpotifyUI;
+        player = Player.getInstance(jpotifyUI.user);
         initPlayer(null);
     }
 
     public void initPlayer(String dir) throws FileNotFoundException, InterruptedException, JavaLayerException {
         removeAll();
         this.dir = dir;
-        sina = Player.getInstance(jpotifyUI.user);
         if(dir!=null)
-            sina.play(dir);
+            player.play(dir);
 //        playIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/play.png", "Play");
 //        pauseIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/pause.png", "Play");
         setLayout(new BorderLayout());
@@ -41,12 +41,12 @@ public class PlayerUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if(play.getText().equals("Pause")) {
                     play.setText("Play");
-                    sina.pause();
+                    player.pause();
                 }
                 else {
                     play.setText("Pause");
                     try {
-                        sina.play(dir);
+                        player.play(dir);
                     } catch (JavaLayerException e1) {
                         e1.printStackTrace();
                     }
@@ -63,6 +63,6 @@ public class PlayerUI extends JPanel {
     }
 
     public Player getSina() {
-        return sina;
+        return player;
     }
 }

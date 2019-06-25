@@ -31,4 +31,15 @@ public class Left extends JPanel {
         temp.setBorder(BorderFactory.createLineBorder(Color.black));
         return temp;
     }
+
+    public PlaylistUI getPlaylist() {
+        return playlist;
+    }
+    public void updatePlaylist(){
+        removeAll();
+        playlist = new PlaylistUI(jpotifyUI);
+        add(library,BorderLayout.NORTH);
+        add(playlist);
+        updateUI();
+    }
 }

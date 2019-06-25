@@ -59,4 +59,7 @@ public class JpotifyUI extends JFrame {
         return right;
     }
 
+    public User getUser() {
+        return user;
+    }
 }

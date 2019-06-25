@@ -30,6 +30,11 @@ public class JpotifyClient {
         } catch (IOException e) {
             System.exit(1);
         } //end try-catch
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     } // end main method
 

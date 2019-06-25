@@ -1,17 +1,18 @@
 package UI;
 
+import Logic.ExistException;
 import Logic.MediaList;
-import javazoom.jl.decoder.JavaLayerException;
+import UI.centerElements.SongsUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
+
 
 public class PlaylistUI extends JPanel {
     private JpotifyUI jpotifyUI;
+    private JPanel playlist;
 
     public PlaylistUI(JpotifyUI jpotifyUI){
         super();
@@ -20,10 +21,10 @@ public class PlaylistUI extends JPanel {
         setBackground(Color.black);
 
         JLabel title = Left.makeTitle("Playlists");
-        JPanel library = makePlaylistSection();
+        playlist = makePlaylistSection();
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
-        container.add(library,BorderLayout.NORTH);
+        container.add(playlist,BorderLayout.NORTH);
         add(title,BorderLayout.NORTH);
         container.setBackground(Color.black);
         add(container,BorderLayout.CENTER);
@@ -40,9 +41,9 @@ public class PlaylistUI extends JPanel {
         temp.add(add,c);
         int i = 1;
         for(MediaList playlist:jpotifyUI.user.getLibrary().getPlaylists().values()){
-            JButton playListButton = makeCustomButton(playlist);
-            c.gridy = i++;
-            temp.add(playListButton,c);
+                JButton playListButton = makeCustomButton(playlist);
+                c.gridy = i++;
+                temp.add(playListButton,c);
         }
         temp.setBackground(Color.black);
         return temp;
@@ -50,31 +51,95 @@ public class PlaylistUI extends JPanel {
 
     private JButton makeAddButton() {
         JButton temp = new JButton("Add PlaylistUI");
-        JFileChooser chooser = new JFileChooser();
         temp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                chooser.showDialog(chooser,"Open");
-                try {
-                    jpotifyUI.user.getPlayer().changeSong(chooser.getSelectedFile().getAbsolutePath());
+                JFrame getInfo = new JFrame("New Playlist");
+                getInfo.setSize(300,100);
+                JLabel name = new JLabel("Playlist Name: ");
+                JTextField input = new JTextField();
+                JButton create = new JButton("Create");
+                JPanel container = new JPanel();
+                container.setLayout(new GridLayout(2,2));
+                container.add(name);
+                container.add(input);
+                create.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            if (!input.getText().equals("")) {
+                                jpotifyUI.getUser().getLibrary().addPlayList(input.getText());
+                                getInfo.setVisible(false);
+                            } else {
+                                JFrame error = new JFrame("ERROR");
+                                error.setSize(300,100);
+                                JPanel container = new JPanel();
+                                JLabel msg = new JLabel("Please enter a name!");
+                                JButton ok = new JButton("Ok");
+                                ok.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        error.setVisible(false);
+                                    }
+                                });
+                                container.add(msg);
+                                container.add(ok);
+                                error.add(container);
+                                error.setVisible(true);
 
-                } catch (FileNotFoundException e1) {
-                    e1.printStackTrace();
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                } catch (JavaLayerException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
+                            }
+                        }catch (ExistException ex){
+                            JFrame error = new JFrame("ERROR");
+                            error.setSize(300,100);
+                            JPanel container = new JPanel();
+                            JLabel msg = new JLabel("Playlist already exists.");
+                            JButton ok = new JButton("Ok");
+                            ok.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    error.setVisible(false);
+                                }
+                            });
+                            container.add(msg);
+                            container.add(ok);
+                            error.add(container);
+                            error.setVisible(true);
+                        }
+                        jpotifyUI.getLeft().updatePlaylist();
+
+                    }
+                });
+                container.add(create);
+                getInfo.add(container);
+                getInfo.setVisible(true);
+            }});
         return temp;
     }
 
     private JButton makeCustomButton(MediaList playlist){
         JButton temp = new JButton(playlist.getName());
-        /*
-        implement action listener here
-         */
+        temp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jpotifyUI.getMain().removeAll();
+                if(!playlist.getName().equals("Favorite Songs") && !playlist.getName().equals("Shared Playlist")) {
+                    JButton deletePlaylist = new JButton("Delete Playlist");
+                    deletePlaylist.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            jpotifyUI.getUser().getLibrary().removePlayList(playlist);
+                            jpotifyUI.getMain().removeAll();
+                            jpotifyUI.getMain().updateUI();
+                            jpotifyUI.getLeft().updatePlaylist();
+                        }
+                    });
+                    jpotifyUI.getMain().add(deletePlaylist);
+                }
+                jpotifyUI.getMain().add(new JSeparator());
+                jpotifyUI.getMain().add(new SongsUI(jpotifyUI,playlist));
+                jpotifyUI.getMain().updateUI();
+            }
+        });
         return temp;
     }
 

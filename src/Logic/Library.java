@@ -3,6 +3,7 @@ package Logic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,15 +14,15 @@ public class Library {
     User user;
     ArrayList<Media> songs;
     HashMap<String,Album> albums;
-    HashMap<String,MediaList> playlists;
+    LinkedHashMap<String,MediaList> playlists;
 
     public Library(User user){ //Constructor
         this.user = user;
-        this.playlists = new HashMap<>();
+        this.playlists = new LinkedHashMap<>();
+        this.playlists.put("Favorite  Songs",new MediaList("Favorite Songs"));
         this.songs = new ArrayList<>();
         this.albums = new HashMap<>();
         this.playlists.put("Sharable PlaylistUI",new SharablePlayList());
-        this.playlists.put("Favorite Songs",new FavoriteSongs());
     }
 
     /**
@@ -30,10 +31,10 @@ public class Library {
      */
 
     public void addSong(Media newSong){
-        if(!songs.contains(newSong))
-            this.songs.add(newSong);
-        else
-            return;
+        for (Media m:songs)
+            if(m.getDir().equals(newSong.getDir()))
+                return;
+        songs.add(newSong);
         String album = newSong.getAlbum();
         if(albums.containsKey(album))
             addToMedialist(newSong,albums.get(album));
@@ -60,15 +61,23 @@ public class Library {
                 entry.getValue().removeSong(exsong);
         songs.remove(exsong);
     }
-    public void addPlayList(String name){
+    public void addPlayList(String name) throws ExistException{
         if(!playlists.containsKey(name))
             playlists.put(name,new MediaList(name));
+        else
+            throw new ExistException();
     }
     public void removePlayList(MediaList playList){
         if(playlists.containsValue(playList))
             playlists.remove(playList.getName());
     }
     public void addToMedialist(Media newSong,MediaList mediaList){
+        if(!mediaList.songExists(newSong))
+            mediaList.addSong(newSong);
+    }
+
+    public void addToMedialist(Media newSong,String name){
+        MediaList mediaList = playlists.get(name);
         if(!mediaList.songExists(newSong))
             mediaList.addSong(newSong);
     }
@@ -86,8 +95,20 @@ public class Library {
     public ArrayList<String> searchSong(String name){
         ArrayList<String> result = new ArrayList<>();
         for (Media m:songs)
-            if(m.getName().toLowerCase().contains(name.toLowerCase()))
-                result.add(m.getName());
+            try {
+                if (m.getName().toLowerCase().contains(name.toLowerCase()))
+                    result.add(m.getName());
+            }catch (Exception e){}
+        return result;
+    }
+
+    public ArrayList<Media> getSearchSongResult(String name){
+        ArrayList<Media> result = new ArrayList<>();
+        for (Media m:songs)
+            try {
+                if (m.getName().toLowerCase().contains(name.toLowerCase()))
+                    result.add(m);
+            }catch (Exception e){}
         return result;
     }
 
@@ -101,5 +122,12 @@ public class Library {
 
     public HashMap<String, MediaList> getPlaylists() {
         return playlists;
+    }
+
+    public ArrayList<Media> getAlbumSongs(Album album){
+        ArrayList<Media> result = new ArrayList<>();
+        for (Media song:album.getSongs())
+                result.add(song);
+        return result;
     }
 }

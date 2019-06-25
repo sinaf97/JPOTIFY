@@ -5,6 +5,8 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class Media {
@@ -13,6 +15,8 @@ public class Media {
     private String artist;
     private String album;
     private byte[] artWork;
+    private Boolean favorite;
+    private static byte[] defaultArtWork;
 
     public Media(String dir) throws IOException, InvalidDataException, UnsupportedTagException {
         this.dir = dir;
@@ -21,6 +25,7 @@ public class Media {
         long length = song.length();
         input.skip(length-128);
         byte[] last128 = new byte[128];
+
         input.read(last128);
         String info = new String(last128);
         String tag = info.substring(0, 3);
@@ -33,10 +38,21 @@ public class Media {
         Mp3File mp3file = new Mp3File(dir);
         if (mp3file.hasId3v2Tag()) {
             ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-            artWork = id3v2Tag.getAlbumImage();
+            if(id3v2Tag.getAlbumImage() != null)
+                artWork = id3v2Tag.getAlbumImage();
+            else
+                artWork = defaultArtWork;
+
         }
+        checkFields(song);
+        favorite = false;
 
 }
+    static{
+        File temp = new File("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/artwork.png");
+        try {
+        } catch (Exception e){}
+    }
 
     public String getDir() {
         return dir;
@@ -55,5 +71,23 @@ public class Media {
     }
     public String[] getInfo(){
         return new String[]{name, artist, album};
+    }
+
+    public void checkFields(File song){
+        if(name == null)
+            name = song.getName().split("\\.")[0];
+        if(artist == null)
+            artist = "Various Artists";
+        if(album == null)
+            album = "Unknown";
+
+    }
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
     }
 }
