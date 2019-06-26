@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
+import java.io.ObjectOutputStream;
 
 public class Logout_Client implements ServerInformation{
 
@@ -21,16 +22,16 @@ public class Logout_Client implements ServerInformation{
      * @return a array name of user's online friends, to say them this user get offline
      * @throws IOException
      */
-    public String[] logoutAction() throws IOException {
+    public void logoutAction() throws IOException {
 
         Socket clientSocket = null;
-        PrintWriter out = null;
+        ObjectOutputStream out = null;
         BufferedReader in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (IOException e) {
@@ -38,11 +39,11 @@ public class Logout_Client implements ServerInformation{
         } //end try-catch
 
         String order = this.user.getUsername() + "&logout";
-        out.println(order);
+        out.writeObject(order);
 
-        String commandFriends = in.readLine();
+        String nothing = in.readLine();
 
-        return commandFriends.split("&");
+//        return commandFriends.split("&");
 
 
     } // end main method

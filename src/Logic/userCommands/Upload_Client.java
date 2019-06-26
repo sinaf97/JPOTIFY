@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.FileNotFoundException;
+import java.io.ObjectOutputStream;
 
 public class Upload_Client implements ServerInformation{
 
@@ -29,13 +30,13 @@ public class Upload_Client implements ServerInformation{
     public Boolean upload(File file, String songName) throws IOException {
 
         Socket clientSocket = null;
-        PrintWriter out = null;
+        ObjectOutputStream out = null;
         BufferedReader in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (IOException e) {
@@ -43,7 +44,7 @@ public class Upload_Client implements ServerInformation{
         } //end try-catch
 
         String order = this.user.getUsername() + "&Upload&"  + songName;
-        out.println(order);
+        out.writeObject(order);
 
         FileInputStream inMyComputer = null;
 
@@ -59,8 +60,7 @@ public class Upload_Client implements ServerInformation{
             while ((c = inMyComputer.read()) != -1) {
                 music += (char)c;
             }
-            music += (char)('\0');
-            out.println(music);
+            out.writeObject(music);
 
 
         } finally {

@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
+import java.io.ObjectOutputStream;
 
 /**
  * This class has 3 usages: <p>
@@ -37,13 +38,13 @@ public class GetOnlineFriends_Client implements ServerInformation{
     public String[] getOnlineFriends() throws IOException {
 
         Socket clientSocket = null;
-        PrintWriter out = null;
+        ObjectOutputStream out = null;
         BufferedReader in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (IOException e) {
@@ -51,7 +52,7 @@ public class GetOnlineFriends_Client implements ServerInformation{
         } //end try-catch
 
         String order = this.user.getUsername() + "&getOnlineFriends";
-        out.println(order);
+        out.writeObject(order);
 
         String commandFriends = in.readLine();
 
