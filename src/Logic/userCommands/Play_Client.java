@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.net.Socket;
 import java.io.ObjectOutputStream;
 
-public class Close_Client implements ServerInformation {
+public class Play_Client implements ServerInformation{
 
     private User user;
 
-    public Close_Client(User user) {
+    public Play_Client(User user) {
         this.user = user;
     }
 
@@ -22,7 +22,7 @@ public class Close_Client implements ServerInformation {
      * @return a array name of user's online friends, to say them this user get offline
      * @throws IOException
      */
-    public void closeAction() throws IOException {
+    public void playAction(String time, String songName) throws IOException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
@@ -38,11 +38,11 @@ public class Close_Client implements ServerInformation {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&close";
+        String order = this.user.getUsername() + "&play&" + songName + "&" + time;
         out.writeObject(order);
 
         String nothing = in.readLine();
-//
+
 //        return commandFriends.split("&");
 
 

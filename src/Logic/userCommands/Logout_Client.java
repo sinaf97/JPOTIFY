@@ -22,7 +22,7 @@ public class Logout_Client implements ServerInformation{
      * @return a array name of user's online friends, to say them this user get offline
      * @throws IOException
      */
-    public String[] logoutAction() throws IOException {
+    public void logoutAction() throws IOException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
@@ -41,9 +41,9 @@ public class Logout_Client implements ServerInformation{
         String order = this.user.getUsername() + "&logout";
         out.writeObject(order);
 
-        String commandFriends = in.readLine();
+        String nothing = in.readLine();
 
-        return commandFriends.split("&");
+//        return commandFriends.split("&");
 
 
     } // end main method

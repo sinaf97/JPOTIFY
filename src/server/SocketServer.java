@@ -76,6 +76,14 @@ public class SocketServer {
     public void addToUserPortNumbers(User user, int portNumber) {
         this.userPortNumbers.put(user, portNumber);
     }
+
+    public HashMap <User, String> getUserHostNames() {
+        return userHostNames;
+    }
+
+    public HashMap <User, Integer> getUserPortNumbers() {
+        return userPortNumbers;
+    }
 }
 
 

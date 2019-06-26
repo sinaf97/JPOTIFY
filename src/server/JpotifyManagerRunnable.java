@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
 import java.io.ObjectInputStream;
+import java.time.LocalDateTime;
 
 
 // we prefer to implement runnable interface rather than extend thread class
@@ -123,11 +124,18 @@ public class JpotifyManagerRunnable implements Runnable{
         switch (command) {
             case "getOnlineFriends": {
                 this.user.setOnline(true);
-                return addFriends(s);
+                String friends = addFriends(s);
+                MyThread thread = new MyThread("Thread", friends, "online");
+                thread.start();
+                return friends;
             }
+
             case "close": {
                 this.user.setOnline(false);
-                return addFriends(s);
+                String friends = addFriends(s);
+                MyThread thread = new MyThread("Thread", friends, "offline");
+                thread.start();
+                return " ";
             }
 //            case "open": {
 //                return addFriends(s);
@@ -140,17 +148,18 @@ public class JpotifyManagerRunnable implements Runnable{
 //            }
             case "logout": {
                 this.user.setOnline(false);
-                return addFriends(s);
+                String friends = addFriends(s);
+                MyThread thread = new MyThread("Thread", friends, "offline");
+                thread.start();
+                return " ";
             }
-            case "CreateAccount": {
 
-            }
         }
         return null;
     }
 
     private String readCommand_2nd(String command1, String command2, ObjectInputStream in, PrintWriter out) {
-        String s = null;
+        String s = "";
         switch (command1) {
             case "Download": {                  //userName(who order)&Download&userName(who wanted SharedList)
                 String[] userName_songName = command2.split("_");
@@ -196,6 +205,15 @@ public class JpotifyManagerRunnable implements Runnable{
                     }
                 }
             }
+            case "play":                       //command2: songName, command3: time
+            case "pause": {
+                String friends = addFriends(s);
+                MyThread thread = new MyThread("Thread", friends, command1, command2, command3);
+                thread.start();
+                return " ";
+
+            }
+
         }
 
         return s;
@@ -287,6 +305,84 @@ public class JpotifyManagerRunnable implements Runnable{
             }
         }
         return false;
+    }
+
+    /**
+     * userSocket should handle:
+     * <p> 1) offline </p>
+     * <p> 2) online </p>
+     * <p> 3) offline </p>
+     *
+     */
+    private void notifyFriends(String friends, String status, String moreInfo_1, String moreInfo_2) {
+        String[] arrayFriend = friends.split("&");
+
+        for (String f:arrayFriend) {
+            User friend = findUser(f);
+            String userHostNames = this.socketServer.getUserHostNames().get(friend);
+            Integer userPortNumbers = this.socketServer.getUserPortNumbers().get(friend);
+
+            Socket clientSocket = null;
+            PrintWriter out = null;
+
+            try {
+                clientSocket = new Socket(userHostNames, userPortNumbers);
+                // create our IO streams
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+            } catch (IOException e) {
+                System.exit(1);
+            } //end try-catch
+
+            String order = "";
+
+            switch (status) {
+                case "online":
+                case "offline": {
+                    order = this.user.getUsername() + "&" + status;
+                    break;
+                }
+                case "play":
+                case "pause": {
+                    order = this.user.getUsername() + "&" + status + "&" + moreInfo_1 + "&" + moreInfo_2;
+                    break;
+                }
+
+            }
+
+            out.println(order);
+
+        }
+
+
+
+    }
+
+    private class MyThread extends Thread {
+        private String friends;
+        private String status;
+        private String moreInfo_1 = null;
+        private String moreInfo_2 = null;
+
+        public MyThread(String name, String friends, String status) {
+            super(name);
+            this.friends = friends;
+            this.status = status;
+        }
+
+        public MyThread(String name, String friends, String status, String moreInfo_1, String moreInfo_2) {
+            super(name);
+            this.friends = friends;
+            this.status = status;
+            this.moreInfo_1 = moreInfo_1;
+            this.moreInfo_2 = moreInfo_2;
+        }
+
+
+        @Override
+        public void run() {
+            notifyFriends(this.friends, this.status, this.moreInfo_1, this.moreInfo_2);
+        }
     }
     
 }
