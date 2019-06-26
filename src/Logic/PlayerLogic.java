@@ -1,8 +1,11 @@
 package Logic;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public interface PlayerLogic {
     public void loadSong(Media song) throws Exception;
@@ -10,8 +13,8 @@ public interface PlayerLogic {
     public void pause();
     public void fastForward();
     public void fastBackward();
-    public void next();
-    public void previus();
+    public void next() throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException;
+    public void previus() throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException;
     public void volumeUp();
     public void volumeDown();
     public void setVolume(int volume);

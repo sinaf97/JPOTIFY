@@ -27,6 +27,10 @@ public class Main {
         t1.getFriends().addFriend(t5);
         Media song = new Media("/Users/sinafarahani/Desktop/show.mp3");
         t1.getLibrary().addSong(song);
+        song = new Media("/Users/sinafarahani/Desktop/sina.mp3");
+        t1.getLibrary().addSong(song);
+        song = new Media("/Users/sinafarahani/Desktop/mamad.mp3");
+        t1.getLibrary().addSong(song);
         t2.setStatus(new Status(song));
         t3.setStatus(new Status(song,false));
         t4.setStatus(new Status(song,false));

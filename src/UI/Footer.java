@@ -20,9 +20,9 @@ public class Footer extends JPanel {
     public Footer(JpotifyUI jpotifyUI) throws FileNotFoundException, InterruptedException, JavaLayerException {
         super();
         this.jpotifyUI = jpotifyUI;
+//        setLayout(new BorderLayout());
         playerUI = new PlayerUI(jpotifyUI);
         add(playerUI);
-
     }
 
     public PlayerUI getPlayerUI() {

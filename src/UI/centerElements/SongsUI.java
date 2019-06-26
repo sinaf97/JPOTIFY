@@ -3,6 +3,8 @@ package UI.centerElements;
 import Logic.Media;
 import Logic.MediaList;
 import UI.JpotifyUI;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 
 import javax.swing.*;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SongsUI extends JPanel{
@@ -19,9 +22,11 @@ public class SongsUI extends JPanel{
         super();
         this.jpotifyUI = jpotifyUI;
         int i = 1;
+        int j = 0;
         for(Media song:jpotifyUI.getUser().getLibrary().getSongs()) {
             setLayout(new GridLayout(i++,1));
-            add(new Song(song));
+            add(new Song(song,j));
+            j++;
 
         }
         jpotifyUI.getMain().updateUI();
@@ -33,9 +38,11 @@ public class SongsUI extends JPanel{
         super();
         this.jpotifyUI = jpotifyUI;
         int i = 1;
+        int j = 0;
         for(Media song:playlist.getSongs()) {
             setLayout(new GridLayout(i++,1));
-            add(new Song(song,playlist));
+            add(new Song(song,playlist,j));
+            j++;
 
         }
         jpotifyUI.getMain().updateUI();
@@ -48,9 +55,11 @@ public class SongsUI extends JPanel{
         this.jpotifyUI = jpotifyUI;
 //        setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         int i = 1;
+        int j = 0;
         for(Media song:entry) {
             setLayout(new GridLayout(i++,1));
-            add(new Song(song));
+            add(new Song(song,j));
+            j++;
 
         }
         jpotifyUI.getMain().updateUI();
@@ -60,23 +69,16 @@ public class SongsUI extends JPanel{
 
     private class Song extends JPanel{
 
-        public Song(Media song){
+        public Song(Media song,int j){
             super();
             setLayout(new GridLayout(1,5));
             JButton play = new JButton("Play");
-            play.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        jpotifyUI.getUser().getPlayer().changeSong(song.getDir());
-                    } catch (FileNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    } catch (JavaLayerException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+            play.addActionListener(e -> {
+                try {
+                    jpotifyUI.getUser().getPlayer().setPlayerPlaylist(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist());
+                    jpotifyUI.getUser().getPlayer().changeSong(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist(),j);
+                } catch (Exception e1) {
+                    e1.printStackTrace();}
             });
             add(play);
             JButton favorite;
@@ -122,22 +124,16 @@ public class SongsUI extends JPanel{
         }
 
 
-        public Song(Media song,MediaList playlist){
+        public Song(Media song,MediaList playlist,int j){
             super();
             setLayout(new GridLayout(1,5));
             JButton play = new JButton("Play");
-            play.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        jpotifyUI.getUser().getPlayer().changeSong(song.getDir());
-                    } catch (FileNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    } catch (JavaLayerException e1) {
-                        e1.printStackTrace();
-                    }
+            play.addActionListener(e -> {
+                try {
+                    jpotifyUI.getUser().getPlayer().setPlayerPlaylist(playlist);
+                    jpotifyUI.getUser().getPlayer().changeSong(playlist,j);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
             });
             add(play);
@@ -146,48 +142,39 @@ public class SongsUI extends JPanel{
                 favorite = new JButton("Unlike");
             else
                 favorite = new JButton("Like");
-            favorite.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if(song.getFavorite()) {
-                        song.setFavorite(false);
-                        favorite.setText("Like");
-                        jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").removeSong(song);
+            favorite.addActionListener(e -> {
+                if(song.getFavorite()) {
+                    song.setFavorite(false);
+                    favorite.setText("Like");
+                    jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").removeSong(song);
 
-                    }
-                    else {
-                        song.setFavorite(true);
-                        favorite.setText("Unlike");
-                        jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").addSong(song);
-
-                    }
-                    jpotifyUI.getMain().updateUI();
                 }
+                else {
+                    song.setFavorite(true);
+                    favorite.setText("Unlike");
+                    jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").addSong(song);
 
+                }
+                jpotifyUI.getMain().updateUI();
             });
             add(favorite);
 
 
             JButton removeFromPlaylist = new JButton("-");
-            removeFromPlaylist.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    removeSongFromPlaylist(song,playlist);
-                    jpotifyUI.getMain().removeAll();
-                    if(!playlist.getName().equals("Favorite Songs") && !playlist.getName().equals("Shared Playlist")) {
-                        JButton deletePlaylist = new JButton("Delete Playlist");
-                        deletePlaylist.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
+            removeFromPlaylist.addActionListener(e -> {
+                removeSongFromPlaylist(song,playlist);
+                jpotifyUI.getMain().removeAll();
+                if(!playlist.getName().equals("Favorite Songs") && !playlist.getName().equals("Shared Playlist")) {
+                    JButton deletePlaylist = new JButton("Delete Playlist");
+                    deletePlaylist.addActionListener(e12 -> {
 
-                            }
-                        });
-                        jpotifyUI.getMain().add(deletePlaylist);
-                    }
-                    jpotifyUI.getMain().add(new JSeparator());
-                    jpotifyUI.getMain().add(new SongsUI(jpotifyUI,playlist));
-                    jpotifyUI.getMain().updateUI();
-                }});
+                    });
+                    jpotifyUI.getMain().add(deletePlaylist);
+                }
+                jpotifyUI.getMain().add(new JSeparator());
+                jpotifyUI.getMain().add(new SongsUI(jpotifyUI,playlist));
+                jpotifyUI.getMain().updateUI();
+            });
             add(removeFromPlaylist);
 
 
@@ -204,12 +191,9 @@ public class SongsUI extends JPanel{
             JPanel container = new JPanel();
             JList playlists = new JList(names);
             JButton add = new JButton("Add");
-            add.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    jpotifyUI.getUser().getLibrary().addToMedialist(song,(String) playlists.getSelectedValue());
-                    selectPlaylist.setVisible(false);
-                }
+            add.addActionListener(e -> {
+                jpotifyUI.getUser().getLibrary().addToMedialist(song,(String) playlists.getSelectedValue());
+                selectPlaylist.setVisible(false);
             });
             container.setLayout(new BoxLayout(container,3));
             container.add(playlists);
