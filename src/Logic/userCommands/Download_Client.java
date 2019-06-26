@@ -1,4 +1,6 @@
-package Logic;
+package Logic.userCommands;
+
+import Logic.User;
 
 import java.io.PrintWriter;
 import java.io.FileOutputStream;
@@ -7,13 +9,26 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.io.FileNotFoundException;
 
-public class DownloadThread_Client {
-    public static void main(String[] args) throws IOException {
-        String hostName = "127.0.0.1";
-        int portNumber = 44444;
+public class Download_Client implements ServerInformation{
+    private User user;
+
+    public Download_Client(User user) {
+        this.user = user;
+    }
+
+    /**
+     *
+     * @param file where do you like to download file in it
+     * @param userNameOfYourFriend the userName of your friend that you want to download his/her file from his/her
+     *                             sharePlayList
+     * @param songName the name of that song you want to download it
+     *
+     * @throws IOException
+     */
+    public void download(File file, String userNameOfYourFriend , String songName) throws IOException {
+
         Socket clientSocket = null;
         PrintWriter out = null;
         BufferedReader in = null;
@@ -28,9 +43,9 @@ public class DownloadThread_Client {
             System.exit(1);
         } //end try-catch
 
-        out.println("please download Ali");
+        String order = this.user.getUsername() + "&Download&" + userNameOfYourFriend + "_" + songName;
+        out.println(order);
 
-        File file = new File("Mohammad(client).txt");
         FileOutputStream inMyComputer = null;
 
         try {

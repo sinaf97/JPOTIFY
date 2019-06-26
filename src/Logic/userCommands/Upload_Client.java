@@ -1,4 +1,6 @@
-package Logic;
+package Logic.userCommands;
+
+import Logic.User;
 
 import java.io.PrintWriter;
 import java.io.FileInputStream;
@@ -10,10 +12,22 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.FileNotFoundException;
 
-public class UploadThread_Client {
-    public static void main(String[] args) throws IOException {
-        String hostName = "127.0.0.1";
-        int portNumber = 44444;
+public class Upload_Client implements ServerInformation{
+
+    private User user;
+
+    public Upload_Client(User user) {
+        this.user = user;
+    }
+
+    /**
+     *
+     * @param file the path of the media in the user computer
+     * @param songName the unique name of that song
+     * @throws IOException
+     */
+    public Boolean upload(File file, String songName) throws IOException {
+
         Socket clientSocket = null;
         PrintWriter out = null;
         BufferedReader in = null;
@@ -28,9 +42,9 @@ public class UploadThread_Client {
             System.exit(1);
         } //end try-catch
 
-        out.println("upload");
+        String order = this.user.getUsername() + "&Upload&"  + songName;
+        out.println(order);
 
-        File file = new File("Mohammad.txt");
         FileInputStream inMyComputer = null;
 
         try {
@@ -48,12 +62,14 @@ public class UploadThread_Client {
             music += (char)('\0');
             out.println(music);
 
+
         } finally {
             if (inMyComputer != null) {
                 inMyComputer.close();
             }
         }
 
+        return in.readLine().equals("Process done successfully");
 
     } // end main method
 
