@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 public class Pause_Client implements ServerInformation{
 
@@ -19,34 +20,26 @@ public class Pause_Client implements ServerInformation{
 
     /**
      *
-     * @return a array name of user's online friends, to say them this user get offline
      * @throws IOException
      */
-    public void pauseAction(String time, String songName) throws IOException {
+    public void pauseAction() throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
-        BufferedReader in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&pause&" + songName + "&" + time;
+        String order = this.user.getUsername() + "&pause";
         out.writeObject(order);
 
-        String nothing = in.readLine();
-
-//        return commandFriends.split("&");
-
-
-    } // end main method
+        out.writeObject(this.user);
+    }
 
 } // end class
-

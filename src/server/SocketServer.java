@@ -54,6 +54,13 @@ public class SocketServer {
         return this.users;
     }
 
+    public void updateUser(User user) {
+        if(this.users.containsKey(user.getUsername()))  {
+
+        }
+    }
+
+
     public void addTosharedPlaylist(String username, Media media) {
         if (sharedPlaylist.containsKey(username))
         this.sharedPlaylist.get(username).addSong(media);

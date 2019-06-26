@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.io.FileNotFoundException;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 public class Download_Client implements ServerInformation{
     private User user;

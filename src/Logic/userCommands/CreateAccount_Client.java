@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 /**
  * After that a user, completely entered his/her Information, you should call this class for
@@ -33,17 +34,17 @@ public class CreateAccount_Client implements ServerInformation{
      */
 
 
-    public Boolean confirm() throws IOException {
+    public Boolean confirm() throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
-        BufferedReader in = null;
+        ObjectInputStream in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new ObjectInputStream((clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
@@ -58,7 +59,7 @@ public class CreateAccount_Client implements ServerInformation{
             System.out.println(e);
         }
 
-        String finalCommand = in.readLine();
+        String finalCommand = (String) in.readObject();
 
         if (finalCommand.equals("True")) {
             out.writeObject(this.userHostName);

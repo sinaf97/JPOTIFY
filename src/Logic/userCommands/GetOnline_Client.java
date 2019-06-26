@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 /**
  * This class has 3 usages: <p>
@@ -22,44 +23,43 @@ import java.io.ObjectOutputStream;
  *          are completely different... </p>
  */
 
-public class GetOnlineFriends_Client implements ServerInformation{
+public class GetOnline_Client implements ServerInformation{
 
     private User user;
 
-    public GetOnlineFriends_Client(User user) {
+    public GetOnline_Client(User user) {
         this.user = user;
     }
 
     /**
      *
-     * @return a array name of user's online friend
+     * @return all of the information about that user who call this class (return a reference
+     *          to that user who get online)
+     *
      * @throws IOException
      */
-    public String[] getOnlineFriends() throws IOException {
+    public User getMyselfAction() throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
-        BufferedReader in = null;
+        ObjectInputStream in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new ObjectInputStream((clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&getOnlineFriends";
+        String order = this.user.getUsername() + "&getMyself";
         out.writeObject(order);
 
-        String commandFriends = in.readLine();
+        return (User) in.readObject();
 
-        return commandFriends.split("&");
-
-
-    } // end main method
+    }
 
 } // end class
 

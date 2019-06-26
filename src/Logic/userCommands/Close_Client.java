@@ -18,6 +18,9 @@ public class Close_Client implements ServerInformation {
     }
 
     /**
+     * <p>
+     *     "close" and "logout" classes are just the same.
+     * </p>
      *
      * @return a array name of user's online friends, to say them this user get offline
      * @throws IOException
@@ -26,13 +29,11 @@ public class Close_Client implements ServerInformation {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
-        BufferedReader in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
@@ -41,9 +42,7 @@ public class Close_Client implements ServerInformation {
         String order = this.user.getUsername() + "&close";
         out.writeObject(order);
 
-        String nothing = in.readLine();
-//
-//        return commandFriends.split("&");
+        out.writeObject(this.user);
 
 
     } // end main method
