@@ -2,6 +2,7 @@ package UI.centerElements;
 
 import Logic.Media;
 import Logic.MediaList;
+import Logic.SongSerial;
 import UI.JpotifyUI;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -11,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +44,22 @@ public class SongsUI extends JPanel{
         for(Media song:playlist.getSongs()) {
             setLayout(new GridLayout(i++,1));
             add(new Song(song,playlist,j));
+            j++;
+
+        }
+        jpotifyUI.getMain().updateUI();
+
+
+    }
+
+    public SongsUI(JpotifyUI jpotifyUI,MediaList playlist,String mode){
+        super();
+        this.jpotifyUI = jpotifyUI;
+        int i = 1;
+        int j = 0;
+        for(Media song:playlist.getSongs()) {
+            setLayout(new GridLayout(i++,1));
+            add(new Song(song,playlist,j,"Shared Playlist"));
             j++;
 
         }
@@ -104,6 +122,14 @@ public class SongsUI extends JPanel{
             JButton addToPlaylist = new JButton("+");
             addToPlaylist.addActionListener(e -> addSongToPlaylist(song));
 
+            JButton upload = new JButton("Share");
+            upload.addActionListener(e -> {
+                SongSerial toUpload = new SongSerial(new File(song.getDir()));
+                /*
+                code to upload the file
+                 */
+            });
+
 
             setLayout(new GridLayout(1,2));
             JPanel container1 = new JPanel();
@@ -124,6 +150,7 @@ public class SongsUI extends JPanel{
             container2.add(temp3);
             add(container1);
             add(container2);
+            add(upload);
         }
 
 
@@ -182,12 +209,71 @@ public class SongsUI extends JPanel{
                 jpotifyUI.getMain().updateUI();
             });
 
+            JButton upload = new JButton("Share");
+            upload.addActionListener(e -> {
+                SongSerial toUpload = new SongSerial(new File(song.getDir()));
+                /*
+                code to upload the file
+                 */
+            });
+
 
             setLayout(new GridLayout(1,2));
             JPanel container1 = new JPanel();
             container1.add(play);
             container1.add(favorite);
             container1.add(removeFromPlaylist);
+            JPanel container2 = new JPanel();
+            container2.setLayout(new GridLayout(3,1));
+            JLabel temp = new JLabel(song.getName());
+            JLabel temp2 = new JLabel("Artist: "+song.getArtist());
+            JLabel temp3 = new JLabel("Album: "+song.getAlbum());
+            temp.setFont(new Font("timesnewroman",Font.BOLD,14));
+            temp2.setFont(new Font("timesnewroman",Font.PLAIN,12));
+            temp3.setFont(new Font("timesnewroman",Font.PLAIN,10));
+            container2.add(temp);
+            container2.add(temp2);
+            container2.add(temp3);
+            add(container1);
+            add(container2);
+
+        }
+
+        public Song(Media song,MediaList playlist,int j,String mode){
+            super();
+            setLayout(new GridLayout(1,5));
+            JButton play = new JButton("Play");
+            play.addActionListener(e -> {
+                try {
+                    jpotifyUI.getUser().getPlayer().setPlayerPlaylist(playlist);
+                    /*
+                    code here to fetch the song
+                     */
+                    /*
+                    implement a code in which you play a single song
+                     */
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            });
+
+            JButton download = new JButton("Download");
+            play.addActionListener(e -> {
+                try {
+                    /*
+                    code here to fetch the song
+                     */
+
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            });
+
+
+            setLayout(new GridLayout(1,2));
+            JPanel container1 = new JPanel();
+            container1.add(play);
+            container1.add(download);
             JPanel container2 = new JPanel();
             container2.setLayout(new GridLayout(3,1));
             JLabel temp = new JLabel(song.getName());

@@ -13,35 +13,37 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws InvalidDataException, IOException, UnsupportedTagException, JavaLayerException, InterruptedException {
-//        User t1 = new User("sinaf97","Sina Farahani");
-//        User t2 = new User("mori","Mori Farahani");
-//        User t3 = new User("mahsa","Mahsa Farahani");
-//        User t4 = new User("mary","Maryam Farahani");
-//        User t5 = new User("mitra","Mitra Farahani");
-//        t2.setOnline(true);
-//        t3.setOnline(false);
-//        t4.setOnline(true);
-//        t5.setOnline(true);
-//        t1.getFriends().addFriend(t2);
-//        t1.getFriends().addFriend(t3);
-//        t1.getFriends().addFriend(t4);
-//        t1.getFriends().addFriend(t5);
-//        Media song = null;
-//        try {
-//            song = new Media("/Users/sinafarahani/Desktop/show.mp3");
-//            t1.getLibrary().addSong(song);
-//            song = new Media("/Users/sinafarahani/Desktop/sina.mp3");
-//            t1.getLibrary().addSong(song);
-//            song = new Media("/Users/sinafarahani/Desktop/mamad.mp3");
-//        }catch (Exception e){}
-//        t1.getLibrary().addSong(song);
-//        t2.setStatus(new Status(song.getName()));
-//        t3.setStatus(new Status(song.getName(),false));
-//        t4.setStatus(new Status(song.getName(),false));
-//        t5.setStatus(new Status(song.getName(),true));
-//        t1.setUi( new JpotifyUI(t1));
+        User t1 = new User("sinaf97","Sina Farahani");
+        User t2 = new User("mori","Mori Farahani");
+        User t3 = new User("mahsa","Mahsa Farahani");
+        User t4 = new User("mary","Maryam Farahani");
+        User t5 = new User("mitra","Mitra Farahani");
+        t2.setOnline(true);
+        t3.setOnline(false);
+        t4.setOnline(true);
+        t5.setOnline(true);
+        t1.getFriends().addFriend(t2);
+        t1.getFriends().addFriend(t3);
+        t1.getFriends().addFriend(t4);
+        t1.getFriends().addFriend(t5);
+        Media song = null;
+        try {
+            song = new Media("/Users/sinafarahani/Desktop/show.mp3");
+            t1.getLibrary().addSong(song);
+            song = new Media("/Users/sinafarahani/Desktop/sina.mp3");
+            t1.getLibrary().addSong(song);
+            song = new Media("/Users/sinafarahani/Desktop/mamad.mp3");
+        }catch (Exception e){}
+        t1.getLibrary().addSong(song);
+        t2.setStatus(new Status(song.getName()));
+        t3.setStatus(new Status(song.getName(),false));
+        t4.setStatus(new Status(song.getName(),false));
+        t5.setStatus(new Status(song.getName(),true));
+        JpotifyUI sina = new JpotifyUI(t1);
+        t1.setUi( sina);
 
-        new LoginPage();
+
+//        new LoginPage();
 
     }
 }

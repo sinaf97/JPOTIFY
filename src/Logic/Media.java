@@ -20,6 +20,7 @@ public class Media implements Serializable{
     private ImageIcon artWork;
     private Boolean favorite;
     private static ImageIcon defaultArtWork;
+    private boolean shared = false;
 
     static {
         try {
