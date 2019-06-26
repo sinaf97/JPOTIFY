@@ -14,6 +14,8 @@ public class SocketServer {
     private ServerSocket serverSocket = null;
     private HashMap <String, User> users = null; //String: userName, User
     private HashMap <String, MediaList> sharedPlaylist = null; //String: userName, sharedPlaylist
+    private HashMap <User, String> userHostNames = null;
+    private HashMap <User, Integer> userPortNumbers = null;
 
     public void runServer() {
         try {
@@ -65,6 +67,14 @@ public class SocketServer {
 
     public HashMap <String, MediaList> getSharedPlaylist() {
         return this.sharedPlaylist;
+    }
+
+    public void addToUserHostNames(User user, String hostName) {
+        this.userHostNames.put(user, hostName);
+    }
+
+    public void addToUserPortNumbers(User user, int portNumber) {
+        this.userPortNumbers.put(user, portNumber);
     }
 }
 

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.io.FileNotFoundException;
+import java.io.ObjectOutputStream;
 
 public class Download_Client implements ServerInformation{
     private User user;
@@ -30,13 +31,13 @@ public class Download_Client implements ServerInformation{
     public void download(File file, String userNameOfYourFriend , String songName) throws IOException {
 
         Socket clientSocket = null;
-        PrintWriter out = null;
+        ObjectOutputStream out = null;
         BufferedReader in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (IOException e) {
@@ -44,7 +45,7 @@ public class Download_Client implements ServerInformation{
         } //end try-catch
 
         String order = this.user.getUsername() + "&Download&" + userNameOfYourFriend + "_" + songName;
-        out.println(order);
+        out.writeObject(order);
 
         FileOutputStream inMyComputer = null;
 
