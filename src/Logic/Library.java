@@ -23,7 +23,7 @@ public class Library implements Serializable {
         this.playlists.put("Favorite  Songs",new MediaList("Favorite Songs"));
         this.songs = new ArrayList<>();
         this.albums = new HashMap<>();
-        this.playlists.put("Sharable PlaylistUI",new SharablePlayList());
+        this.playlists.put("Shared Playlists",new MediaList("Shared Playlists"));
     }
 
     /**

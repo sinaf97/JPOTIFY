@@ -1,19 +1,14 @@
 package UI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 
-import Logic.Media;
 import UI.centerElements.SongsUI;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Header extends JPanel {
     private JpotifyUI jpotifyUI;
@@ -111,6 +106,9 @@ public class Header extends JPanel {
         searchArea.add(searchButton);
         searchArea.add(cbo);
         add(searchArea,BorderLayout.EAST);
+        JButton addFriend = new JButton("Add Friend");
+        addFriend.addActionListener(e -> new AddFriendUI());
+        add(addFriend);
 
 
 

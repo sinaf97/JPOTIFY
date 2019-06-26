@@ -2,6 +2,9 @@ package UI;
 
 import Logic.Media;
 import Logic.Player;
+import Logic.Status;
+import Logic.userCommands.Pause_Client;
+import Logic.userCommands.Play_Client;
 import UI.centerElements.SoundMixer;
 import javazoom.jl.decoder.JavaLayerException;
 
@@ -78,6 +81,9 @@ public class PlayerUI extends JPanel {
 //        play.setIcon(playIcon);
         play.addActionListener(e -> {
             if(play.getToolTipText().equals("Pause")) {
+                jpotifyUI.user.setStatus(new Status(song.getName(),false));
+                Pause_Client toServer = new Pause_Client(jpotifyUI.getUser());
+                //toServer.pauseAction(jpotifyUI.user);
                 play.setToolTipText("Play");
                 play.setIcon(playIcon);
                 player.pause();
@@ -85,6 +91,9 @@ public class PlayerUI extends JPanel {
 
             }
             else {
+                jpotifyUI.user.setStatus(new Status(song.getName(),true));
+                Play_Client toServer = new Play_Client(jpotifyUI.getUser());
+//                toServer.playAction(jpotifyUI.user);
                 play.setToolTipText("Pause");
                 play.setIcon(pauseIcon);
                 playerSlider.sliderThread.setPause(false);
