@@ -3,6 +3,7 @@ import Logic.Status;
 import Logic.User;
 import Logic.Media;
 import UI.JpotifyUI;
+import UI.LoginPage;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
@@ -39,6 +40,8 @@ public class Main {
 //        t4.setStatus(new Status(song.getName(),false));
 //        t5.setStatus(new Status(song.getName(),true));
 //        t1.setUi( new JpotifyUI(t1));
+
+        new LoginPage();
 
     }
 }

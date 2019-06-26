@@ -9,8 +9,9 @@ import javazoom.jl.player.advanced.AdvancedPlayer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class PlayerThread extends Thread  implements Runnable{
+public class PlayerThread extends Thread  implements Runnable, Serializable {
     AdvancedPlayer player;
     private Player parent;
     private boolean playing;

@@ -1,8 +1,9 @@
 package Logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MediaList {
+public class MediaList implements Serializable {
     private ArrayList<Media> songs;
     private String name;
 

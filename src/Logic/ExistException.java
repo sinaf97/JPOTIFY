@@ -1,6 +1,8 @@
 package Logic;
 
-public class ExistException extends Exception {
+import java.io.Serializable;
+
+public class ExistException extends Exception implements Serializable {
 
     public ExistException(){
         super();

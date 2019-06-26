@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class Media {
+public class Media implements Serializable{
     private String dir;
     private String name;
     private String artist;

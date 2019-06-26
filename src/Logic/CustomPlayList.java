@@ -1,7 +1,9 @@
 package Logic;
 
 
-public class CustomPlayList extends MediaList {
+import java.io.Serializable;
+
+public class CustomPlayList extends MediaList implements Serializable {
 
     public CustomPlayList(String name){
         super(name);

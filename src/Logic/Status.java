@@ -1,9 +1,10 @@
 package Logic;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Status{
+public class Status implements Serializable {
     private String songName;
     private Boolean status;
     private LocalDateTime time;

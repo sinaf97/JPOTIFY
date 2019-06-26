@@ -1,6 +1,7 @@
 package Logic;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
  * Class Library holds all the records of songs and albums and playlists in it
  */
 
-public class Library {
+public class Library implements Serializable {
     User user;
     ArrayList<Media> songs;
     HashMap<String,Album> albums;

@@ -1,9 +1,10 @@
 package Logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Friend {
+public class Friend implements Serializable {
     private User user;
     private HashMap<String,User> friendsList; //String: userName, User
 

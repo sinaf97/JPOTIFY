@@ -117,6 +117,8 @@ public class PlaylistUI extends JPanel {
     }
 
     private JButton makeCustomButton(MediaList playlist){
+        if(playlist.getName().equals("Shared Playlist"))
+            return makeSharedPlaylistButton(playlist);
         JButton temp = new JButton(playlist.getName());
         temp.addActionListener(e -> {
             jpotifyUI.getMain().removeAll();
@@ -141,5 +143,8 @@ public class PlaylistUI extends JPanel {
         return temp;
     }
 
+    private JButton makeSharedPlaylistButton(MediaList playlist){
+        return new JButton("Shared");
+    }
 
 }

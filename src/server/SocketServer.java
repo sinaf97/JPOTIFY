@@ -12,10 +12,10 @@ import java.util.HashMap;
 public class SocketServer {
     private final int portNumber = 44444;
     private ServerSocket serverSocket = null;
-    private HashMap <String, User> users = null; //String: userName, User
-    private HashMap <String, MediaList> sharedPlaylist = null; //String: userName, sharedPlaylist
-    private HashMap <User, String> userHostNames = null;
-    private HashMap <User, Integer> userPortNumbers = null;
+    private HashMap <String, User> users = new HashMap<>(); //String: userName, User
+    private HashMap <String, MediaList> sharedPlaylist = new HashMap<>(); //String: userName, sharedPlaylist
+    private HashMap <User, String> userHostNames = new HashMap<>();
+    private HashMap <User, Integer> userPortNumbers = new HashMap<>();
 
     public void runServer() {
         try {

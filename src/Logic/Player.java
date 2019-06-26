@@ -5,8 +5,7 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
-import javazoom.jl.player.advanced.PlaybackEvent;
-import javazoom.jl.player.advanced.PlaybackListener;
+
 
 import java.io.*;
 
@@ -17,7 +16,7 @@ import java.io.*;
  * @version 1.0
  * @since   2019-05-01
  */
-public class Player implements Singleton, PlayerLogic{
+public class Player implements Singleton, PlayerLogic ,Serializable{
     private static Player self = null;
     private User user;
     private AdvancedPlayer player;
@@ -46,28 +45,7 @@ public class Player implements Singleton, PlayerLogic{
     }
 
 
-    /**
-     *
-     *
-     * @param song
-     * @throws FileNotFoundException
-     * @throws JavaLayerException
-     */
-    @Override
-    public void loadSong(Media song) throws FileNotFoundException, JavaLayerException {
-        File temp = new File(song.getDir());
-        input = new FileInputStream(temp);
-        player = new AdvancedPlayer(input);
-        player.setPlayBackListener(new PlaybackListener() {
-            @Override
-            public void playbackStarted(PlaybackEvent evt) {
-                System.out.println("playing");
-//                player.stop();
-                System.out.println("stopped");
 
-            }
-        });
-    }
     @Override
     public void play(String dir) throws JavaLayerException, FileNotFoundException, InterruptedException {
 //        if(thread == null) {
@@ -149,17 +127,6 @@ public class Player implements Singleton, PlayerLogic{
 
 
 
-
-    @Override
-    public void fastForward() {
-
-    }
-
-    @Override
-    public void fastBackward() {
-
-    }
-
     @Override
     public void next() throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException {
         if(playerPlaylistNumber == playerPlaylist.getSongs().size()-1)
@@ -175,40 +142,8 @@ public class Player implements Singleton, PlayerLogic{
         changeSong(playerPlaylist,--playerPlaylistNumber);
     }
 
-    @Override
-    public void volumeUp() {
 
-    }
 
-    @Override
-    public void volumeDown() {
-
-    }
-
-    @Override
-    public void setVolume(int volume) {
-
-    }
-
-    @Override
-    public void mute() {
-
-    }
-
-    @Override
-    public void enqeuePlaylist(Media song) {
-
-    }
-
-    @Override
-    public void deqeuePlaylist(Media song) {
-
-    }
-
-    @Override
-    public void jumpTpFrame(int frame) {
-
-    }
 
 
     public static Player getInstance(User user) throws FileNotFoundException, JavaLayerException, InterruptedException {

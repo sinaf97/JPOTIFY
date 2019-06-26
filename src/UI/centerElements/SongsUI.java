@@ -170,7 +170,10 @@ public class SongsUI extends JPanel{
                 if(!playlist.getName().equals("Favorite Songs") && !playlist.getName().equals("Shared Playlist")) {
                     JButton deletePlaylist = new JButton("Delete Playlist");
                     deletePlaylist.addActionListener(e12 -> {
-
+                        jpotifyUI.getUser().getLibrary().removePlayList(playlist);
+                        jpotifyUI.getMain().removeAll();
+                        jpotifyUI.getMain().updateUI();
+                        jpotifyUI.getLeft().updatePlaylist();
                     });
                     jpotifyUI.getMain().add(deletePlaylist);
                 }

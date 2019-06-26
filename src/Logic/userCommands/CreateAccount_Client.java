@@ -52,7 +52,11 @@ public class CreateAccount_Client implements ServerInformation{
         String order = "createAccount";
         out.writeObject(order);
 
-        out.writeObject(this.user);
+        try {
+            out.writeObject(this.user);
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
         String finalCommand = in.readLine();
 

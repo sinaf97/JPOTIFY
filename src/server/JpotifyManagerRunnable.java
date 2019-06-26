@@ -354,7 +354,7 @@ public class JpotifyManagerRunnable implements Runnable{
 
             }
 
-            out.println(order);
+//            out.println(order);
 
         }
 
