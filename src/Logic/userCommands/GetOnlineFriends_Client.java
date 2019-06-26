@@ -16,13 +16,14 @@ import java.net.Socket;
  *          and him/her online friends should understand that this user get online. (two works) </p>
  * <p>3) when a user "login" into Jpotify, should get him/her online friends
  *          and him/her online friends should understand that this user get online. (two works) </p>
+ *          
+ * <p>Note: don't forget: before a user "sing up", should "create account". these commands
+ *          are completely different... </p>
  */
 
-public class GetOnlineFriends_Client {
+public class GetOnlineFriends_Client implements ServerInformation{
 
     private User user;
-    public static final String hostName = "127.0.0.1";
-    public static final int portNumber = 44444;
 
     public GetOnlineFriends_Client(User user) {
         this.user = user;

@@ -8,11 +8,9 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Close_Client {
+public class Close_Client implements ServerInformation {
 
     private User user;
-    public static final String hostName = "127.0.0.1";
-    public static final int portNumber = 44444;
 
     public Close_Client(User user) {
         this.user = user;

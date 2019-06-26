@@ -8,20 +8,27 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Logout_Client implements ServerInformation{
+/**
+ * After that a user, completely entered his/her Information, you should call this class for
+ * confirm his/her Information.
+ */
+
+public class CreateAccount_Client implements ServerInformation{
 
     private User user;
 
-    public Logout_Client(User user) {
+    public CreateAccount_Client(User user) {
         this.user = user;
     }
 
     /**
      *
-     * @return a array name of user's online friends, to say them this user get offline
+     * @return Can you crate account by these Information or not
      * @throws IOException
      */
-    public String[] logoutAction() throws IOException {
+
+    /*
+    public Boolean confirm() throws IOException {
 
         Socket clientSocket = null;
         PrintWriter out = null;
@@ -37,7 +44,7 @@ public class Logout_Client implements ServerInformation{
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&logout";
+        String order = this.user.getUsername() + "&createAccount";
         out.println(order);
 
         String commandFriends = in.readLine();
@@ -46,6 +53,8 @@ public class Logout_Client implements ServerInformation{
 
 
     } // end main method
+    */
 
 } // end class
+
 

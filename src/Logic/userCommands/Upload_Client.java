@@ -12,11 +12,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.FileNotFoundException;
 
-public class Upload_Client {
+public class Upload_Client implements ServerInformation{
 
     private User user;
-    public static final String hostName = "127.0.0.1";
-    public static final int portNumber = 44444;
 
     public Upload_Client(User user) {
         this.user = user;

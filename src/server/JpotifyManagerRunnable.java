@@ -114,6 +114,9 @@ public class JpotifyManagerRunnable implements Runnable{
             case "logout": {
                 return addFriends(s);
             }
+            case "CreateAccount": {
+
+            }
         }
         return null;
     }
