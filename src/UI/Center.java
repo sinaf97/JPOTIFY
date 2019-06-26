@@ -9,5 +9,6 @@ public class Center extends JPanel {
     public Center(JpotifyUI jpotifyUI){
         super();
         this.jpotifyUI = jpotifyUI;
+        setLayout(new BorderLayout());
     }
 }

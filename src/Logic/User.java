@@ -3,12 +3,13 @@ import UI.JpotifyUI;
 import javazoom.jl.decoder.JavaLayerException;
 
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
 /**
  * Class User is the identity of our client
  */
 
-public class User {
+public class User implements Serializable {
     private String username;
     private String name;
     private Friend friends;

@@ -41,6 +41,7 @@ public class AlbumsUI extends JPanel{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     jpotifyUI.getMain().removeAll();
+                    jpotifyUI.getMain().setLayout(new FlowLayout());
                     jpotifyUI.getMain().add(new SongsUI(jpotifyUI,album.getSongs()));
                 }
             });

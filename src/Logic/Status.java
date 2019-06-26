@@ -4,17 +4,17 @@ package Logic;
 import java.time.LocalDateTime;
 
 public class Status{
-    private Media media;
+    private String songName;
     private Boolean status;
     private LocalDateTime time;
 
-    public Status(Media media){
-        this.media = media;
+    public Status(String songName){
+        this.songName = songName;
         status = true;
         time = LocalDateTime.now();
     }
-    public Status(Media media,boolean status){
-        this.media = media;
+    public Status(String songName,boolean status){
+        this.songName = songName;
         this.status = status;
         time = LocalDateTime.now();
     }
@@ -23,16 +23,16 @@ public class Status{
         return status;
     }
 
-    public Media getMedia() {
-        return media;
+    public String getSongName() {
+        return songName;
     }
 
     public LocalDateTime getTime() {
         return time;
     }
 
-    public void setMedia(Media media) {
-        this.media = media;
+    public void setSongName(String songName) {
+        this.songName = songName;
     }
 
     public void setStatus(Boolean status) {

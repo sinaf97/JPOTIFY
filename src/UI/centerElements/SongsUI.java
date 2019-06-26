@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class SongsUI extends JPanel{
     private JpotifyUI jpotifyUI;
 
-    public SongsUI(JpotifyUI jpotifyUI){
+    public SongsUI(JpotifyUI jpotifyUI) {
         super();
         this.jpotifyUI = jpotifyUI;
         int i = 1;
@@ -50,10 +50,9 @@ public class SongsUI extends JPanel{
 
     }
 
-    public SongsUI(JpotifyUI jpotifyUI, ArrayList<Media> entry){
+    public SongsUI(JpotifyUI jpotifyUI, ArrayList<Media> entry) {
         super();
         this.jpotifyUI = jpotifyUI;
-//        setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         int i = 1;
         int j = 0;
         for(Media song:entry) {
@@ -69,58 +68,62 @@ public class SongsUI extends JPanel{
 
     private class Song extends JPanel{
 
-        public Song(Media song,int j){
+        public Song(Media song,int j) {
             super();
-            setLayout(new GridLayout(1,5));
             JButton play = new JButton("Play");
             play.addActionListener(e -> {
                 try {
                     jpotifyUI.getUser().getPlayer().setPlayerPlaylist(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist());
-                    jpotifyUI.getUser().getPlayer().changeSong(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist(),j);
+                    jpotifyUI.getUser().getPlayer().changeSong(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist(), j);
                 } catch (Exception e1) {
-                    e1.printStackTrace();}
+                    e1.printStackTrace();
+                }
             });
-            add(play);
+
             JButton favorite;
             if (song.getFavorite())
                 favorite = new JButton("Unlike");
             else
                 favorite = new JButton("Like");
-            favorite.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if(song.getFavorite()) {
-                        song.setFavorite(false);
-                        favorite.setText("Like");
-                        jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").removeSong(song);
+            favorite.addActionListener(e -> {
+                if (song.getFavorite()) {
+                    song.setFavorite(false);
+                    favorite.setText("Like");
+                    jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").removeSong(song);
 
-                    }
-                    else {
-                        song.setFavorite(true);
-                        favorite.setText("Unlike");
-                        jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").addSong(song);
+                } else {
+                    song.setFavorite(true);
+                    favorite.setText("Unlike");
+                    jpotifyUI.getUser().getLibrary().getPlaylists().get("Favorite  Songs").addSong(song);
 
-                    }
-                    jpotifyUI.getMain().updateUI();
                 }
-
+                jpotifyUI.getMain().updateUI();
             });
-            add(favorite);
 
 
             JButton addToPlaylist = new JButton("+");
-            addToPlaylist.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    addSongToPlaylist(song);
-                }});
-            add(addToPlaylist);
+            addToPlaylist.addActionListener(e -> addSongToPlaylist(song));
 
 
+            setLayout(new GridLayout(1,2));
+            JPanel container1 = new JPanel();
+            container1.add(play);
+            container1.add(favorite);
+            container1.add(addToPlaylist);
+            JPanel container2 = new JPanel();
+            container2.setLayout(new GridLayout(3,1));
 
-            add(new JLabel(song.getName()));
-            add(new JLabel(song.getArtist()));
-            add(new JLabel(song.getAlbum()));
+            JLabel temp = new JLabel(song.getName());
+            JLabel temp2 = new JLabel("Artist: "+song.getArtist());
+            JLabel temp3 = new JLabel("Album: "+song.getAlbum());
+            temp.setFont(new Font("timesnewroman",Font.BOLD,14));
+            temp2.setFont(new Font("timesnewroman",Font.PLAIN,12));
+            temp3.setFont(new Font("timesnewroman",Font.PLAIN,10));
+            container2.add(temp);
+            container2.add(temp2);
+            container2.add(temp3);
+            add(container1);
+            add(container2);
         }
 
 
@@ -136,7 +139,7 @@ public class SongsUI extends JPanel{
                     e1.printStackTrace();
                 }
             });
-            add(play);
+
             JButton favorite;
             if (song.getFavorite())
                 favorite = new JButton("Unlike");
@@ -157,7 +160,7 @@ public class SongsUI extends JPanel{
                 }
                 jpotifyUI.getMain().updateUI();
             });
-            add(favorite);
+
 
 
             JButton removeFromPlaylist = new JButton("-");
@@ -175,13 +178,27 @@ public class SongsUI extends JPanel{
                 jpotifyUI.getMain().add(new SongsUI(jpotifyUI,playlist));
                 jpotifyUI.getMain().updateUI();
             });
-            add(removeFromPlaylist);
 
 
+            setLayout(new GridLayout(1,2));
+            JPanel container1 = new JPanel();
+            container1.add(play);
+            container1.add(favorite);
+            container1.add(removeFromPlaylist);
+            JPanel container2 = new JPanel();
+            container2.setLayout(new GridLayout(3,1));
+            JLabel temp = new JLabel(song.getName());
+            JLabel temp2 = new JLabel("Artist: "+song.getArtist());
+            JLabel temp3 = new JLabel("Album: "+song.getAlbum());
+            temp.setFont(new Font("timesnewroman",Font.BOLD,14));
+            temp2.setFont(new Font("timesnewroman",Font.PLAIN,12));
+            temp3.setFont(new Font("timesnewroman",Font.PLAIN,10));
+            container2.add(temp);
+            container2.add(temp2);
+            container2.add(temp3);
+            add(container1);
+            add(container2);
 
-            add(new JLabel(song.getName()));
-            add(new JLabel(song.getArtist()));
-            add(new JLabel(song.getAlbum()));
         }
 
         public void addSongToPlaylist(Media song){
@@ -207,5 +224,7 @@ public class SongsUI extends JPanel{
             jpotifyUI.getMain().updateUI();
 
         }
+
     }
+
 }

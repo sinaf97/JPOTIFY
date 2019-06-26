@@ -83,7 +83,7 @@ public class Right extends JPanel {
         JLabel name = new JLabel(u.getName());
         JLabel lastPlayed = null;
         try{
-            lastPlayed = new JLabel(u.getStatus().getMedia().getName());
+            lastPlayed = new JLabel(u.getStatus().getSongName());
         }catch (Exception e){
             lastPlayed = new JLabel("Not Found");
         }
@@ -144,6 +144,16 @@ public class Right extends JPanel {
         temp.add(trash);
         temp.setBackground(new Color(0,0,0));
         return temp;
+    }
+
+    public void updateFriends(){
+        removeAll();
+        onlineFriends = getList("Online");
+        offlineFriends = getList("Offline");
+        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        add(onlineFriends);
+        add(offlineFriends);
+        updateUI();
     }
 
 

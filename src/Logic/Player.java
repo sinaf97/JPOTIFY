@@ -1,7 +1,6 @@
 package Logic;
 
-import UI.JpotifyUI;
-import UI.centerElements.SongsUI;
+
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
@@ -10,7 +9,6 @@ import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
 
 import java.io.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * implement logic of the player

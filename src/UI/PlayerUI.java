@@ -5,6 +5,7 @@ import Logic.Player;
 import UI.centerElements.SoundMixer;
 import javazoom.jl.decoder.JavaLayerException;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.ImageIcon;
 
@@ -17,17 +18,39 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+import static Logic.Media.scale;
 
 public class PlayerUI extends JPanel {
     private JpotifyUI jpotifyUI;
-    ImageIcon playIcon;
-    ImageIcon pauseIcon;
     Player player;
     PlayerSlider playerSlider;
+    static ImageIcon playIcon;
+    static ImageIcon pauseIcon;
+    static ImageIcon nextIcon;
+    static ImageIcon previousIcon;
+    static{
+        String[] dirs = {"play","pause","next","previous"};
+        try {
+            for (String dir:dirs) {
+                BufferedImage bImage = ImageIO.read(new File("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/"+dir+".png"));
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ImageIO.write(bImage, "png", bos);
+                byte[] data = bos.toByteArray();
+                if(dir.equals("play"))
+                    playIcon = new ImageIcon(scale(data, 30, 30,new Color(238,238,238)));
+                else if(dir.equals("pause"))
+                    pauseIcon = new ImageIcon(scale(data, 30, 30,new Color(238,238,238)));
+                else if(dir.equals("next"))
+                    nextIcon = new ImageIcon(scale(data, 30, 30,new Color(238,238,238)));
+                else
+                    previousIcon = new ImageIcon(scale(data, 30, 30,new Color(238,238,238)));
+            }
+
+        }catch (Exception e){}
+    }
 
     public PlayerUI(JpotifyUI jpotifyUI) throws FileNotFoundException, InterruptedException, JavaLayerException {
         super();
@@ -42,20 +65,28 @@ public class PlayerUI extends JPanel {
 //        playIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/play.png", "Play");
 //        pauseIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/pause.png", "Play");
         setLayout(new BorderLayout());
-        JButton play = new JButton("Pause");
-        JButton next = new JButton("Next");
-        JButton previous = new JButton("Previous");
+        JButton play = new JButton();
+        play.setToolTipText("Pause");
+        play.setIcon(pauseIcon);
+        JButton next = new JButton();
+        next.setToolTipText("Next");
+        next.setIcon(nextIcon);
+        JButton previous = new JButton();
+        previous.setToolTipText("Previous");
+        previous.setIcon(previousIcon);
 //        play.setPreferredSize(new Dimension(50,50));
 //        play.setIcon(playIcon);
         play.addActionListener(e -> {
-            if(play.getText().equals("Pause")) {
-                play.setText("Play");
+            if(play.getToolTipText().equals("Pause")) {
+                play.setToolTipText("Play");
+                play.setIcon(playIcon);
                 player.pause();
                 playerSlider.sliderThread.setPause(true);
 
             }
             else {
-                play.setText("Pause");
+                play.setToolTipText("Pause");
+                play.setIcon(pauseIcon);
                 playerSlider.sliderThread.setPause(false);
                 try {
                     player.play();
@@ -98,6 +129,9 @@ public class PlayerUI extends JPanel {
         controlsAndVolume.add(playerSlider);
         add(controlsAndVolume);
         add(makeVolume(),BorderLayout.EAST);
+        try {
+            jpotifyUI.getFooter().addArtWork(song);
+        }catch (Exception e){}
         updateUI();
     }
 
@@ -143,10 +177,7 @@ public class PlayerUI extends JPanel {
 
     public JPanel makeTitle(Media song){
         JPanel temp = new JPanel();
-        temp.setLayout(new GridLayout(1,2));
-        JLabel icon = new JLabel("");
-        icon.setIcon(song.getArtWork());
-        temp.add(icon);
+        temp.setLayout(new GridLayout(3,1));
         temp.add(new JLabel(song.getName()));
         temp.add(new JLabel(song.getArtist()));
         temp.add(new JLabel(song.getAlbum()));
@@ -169,6 +200,7 @@ class PlayerSlider extends JPanel {
         super();
         self = this;
         slider = new JSlider();
+        slider.setSize(300,50);
         time = new JLabel("00:00");
         slider.setMinimum(0);
         slider.setValue(0);

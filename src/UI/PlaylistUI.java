@@ -118,27 +118,25 @@ public class PlaylistUI extends JPanel {
 
     private JButton makeCustomButton(MediaList playlist){
         JButton temp = new JButton(playlist.getName());
-        temp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jpotifyUI.getMain().removeAll();
-                if(!playlist.getName().equals("Favorite Songs") && !playlist.getName().equals("Shared Playlist")) {
-                    JButton deletePlaylist = new JButton("Delete Playlist");
-                    deletePlaylist.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            jpotifyUI.getUser().getLibrary().removePlayList(playlist);
-                            jpotifyUI.getMain().removeAll();
-                            jpotifyUI.getMain().updateUI();
-                            jpotifyUI.getLeft().updatePlaylist();
-                        }
-                    });
-                    jpotifyUI.getMain().add(deletePlaylist);
-                }
-                jpotifyUI.getMain().add(new JSeparator());
-                jpotifyUI.getMain().add(new SongsUI(jpotifyUI,playlist));
-                jpotifyUI.getMain().updateUI();
+        temp.addActionListener(e -> {
+            jpotifyUI.getMain().removeAll();
+            if(!playlist.getName().equals("Favorite Songs") && !playlist.getName().equals("Shared Playlist")) {
+                JButton deletePlaylist = new JButton("Delete Playlist");
+                deletePlaylist.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        jpotifyUI.getUser().getLibrary().removePlayList(playlist);
+                        jpotifyUI.getMain().removeAll();
+                        jpotifyUI.getMain().updateUI();
+                        jpotifyUI.getLeft().updatePlaylist();
+                    }
+                });
+                jpotifyUI.getMain().add(deletePlaylist);
             }
+            jpotifyUI.getMain().add(new JSeparator());
+            jpotifyUI.getMain().setLayout(new FlowLayout());
+            jpotifyUI.getMain().add(new SongsUI(jpotifyUI,playlist));
+            jpotifyUI.getMain().updateUI();
         });
         return temp;
     }
