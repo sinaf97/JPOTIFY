@@ -1,6 +1,7 @@
 package Logic;
 
 import UI.JpotifyUI;
+import UI.centerElements.SongsUI;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
@@ -22,7 +23,10 @@ public class Player implements Singleton, PlayerLogic{
     private static Player self = null;
     private User user;
     private AdvancedPlayer player;
+    private MediaList playerPlaylist;
+    private int playerPlaylistNumber = 0;
     private FileInputStream input;
+    private String dir;
     private PlayerThread thread;
     private boolean playing;
     private int position;
@@ -36,6 +40,7 @@ public class Player implements Singleton, PlayerLogic{
      */
     private Player(User user) throws FileNotFoundException, JavaLayerException, InterruptedException {
         this.user = user;
+        playerPlaylist = new MediaList("");
         self = this;
         String s = new String();
 
@@ -66,16 +71,31 @@ public class Player implements Singleton, PlayerLogic{
         });
     }
     @Override
-    public void play(String dir) throws JavaLayerException{
+    public void play(String dir) throws JavaLayerException, FileNotFoundException, InterruptedException {
+//        if(thread == null) {
+//            thread = new PlayerThread(dir,this);
+//            thread.start();
+//            user.getUi().getFooter().getPlayerUI().initPlayer(dir);
+//        }
+    }
+
+    public void play() throws JavaLayerException{
         if(thread == null) {
-            if(position == 0) {
-                thread = new PlayerThread(dir);
+                thread = new PlayerThread(position,dir,this);
                 thread.start();
-            }
-            else{
-                thread = new PlayerThread(position,dir);
-                thread.start();
-            }
+                System.out.println("playing");
+        }
+        else
+            pause();
+    }
+
+    public void play(MediaList playlist,int j) throws JavaLayerException{
+        if(thread == null) {
+            thread = new PlayerThread(position,dir,this,j);
+            thread.start();
+            System.out.println("playing");
+            user.getUi().getFooter().getPlayerUI().initPlayer(playlist.getSongs().get(j));
+
         }
         else
             pause();
@@ -85,6 +105,7 @@ public class Player implements Singleton, PlayerLogic{
     public void pause() {
         try {
             position = thread.pause();
+            System.out.println(position);
             thread = null;
         }catch (Exception e){
             System.out.println(e);
@@ -92,17 +113,44 @@ public class Player implements Singleton, PlayerLogic{
     }
 
     public void closeAll() {
-        position = 0;
         try {
             thread.player.close();
-        }catch (Exception e){}
+            thread.interrupt();
+        }catch (Exception e){
+//            System.out.println(e);
+        }
         thread = null;
     }
 
-    public void changeSong(String dir) throws FileNotFoundException, InterruptedException, JavaLayerException {
+    public void changeSong(MediaList playlist,int j) throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException {
+        playerPlaylistNumber = j;
+        position = 0;
         closeAll();
-        user.getUi().getFooter().getPlayerUI().initPlayer(dir);
+        this.dir = playlist.getSongs().get(j).getDir();
+        play(playlist,j);
+        thread.setPosition(0);
+        thread.setLastPosition(0);
     }
+
+    public void changeSong(int position) throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException {
+        thread.pause();
+        this.position = position;
+        thread = null;
+        play();
+        thread.setLastPosition(position);
+
+    }
+
+    public void setPlayerPlaylist(MediaList playlist){
+        playerPlaylist = playlist;
+    }
+
+    public MediaList getPlayerPlaylist(){
+        return playerPlaylist;
+    }
+
+
+
 
     @Override
     public void fastForward() {
@@ -115,13 +163,18 @@ public class Player implements Singleton, PlayerLogic{
     }
 
     @Override
-    public void next() {
-
+    public void next() throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException {
+        if(playerPlaylistNumber == playerPlaylist.getSongs().size()-1)
+            playerPlaylistNumber = -1;
+        changeSong(playerPlaylist,++playerPlaylistNumber);
     }
 
     @Override
-    public void previus() {
-
+    public void previus() throws IOException, InterruptedException, JavaLayerException, InvalidDataException, UnsupportedTagException {
+        int j = playerPlaylistNumber;
+        if(playerPlaylistNumber == 0)
+            playerPlaylistNumber = playerPlaylist.getSongs().size();
+        changeSong(playerPlaylist,--playerPlaylistNumber);
     }
 
     @Override

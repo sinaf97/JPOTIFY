@@ -6,6 +6,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -14,9 +15,10 @@ public class Media {
     private String name;
     private String artist;
     private String album;
-    private byte[] artWork;
+    private int length;
+    private ImageIcon artWork;
     private Boolean favorite;
-    private static byte[] defaultArtWork;
+    private static ImageIcon defaultArtWork = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/artwork.png");
 
     public Media(String dir) throws IOException, InvalidDataException, UnsupportedTagException {
         this.dir = dir;
@@ -39,11 +41,12 @@ public class Media {
         if (mp3file.hasId3v2Tag()) {
             ID3v2 id3v2Tag = mp3file.getId3v2Tag();
             if(id3v2Tag.getAlbumImage() != null)
-                artWork = id3v2Tag.getAlbumImage();
+                artWork = new ImageIcon(id3v2Tag.getAlbumImage());
             else
                 artWork = defaultArtWork;
 
         }
+        this.length = (int) mp3file.getLengthInSeconds();
         checkFields(song);
         favorite = false;
 
@@ -89,5 +92,13 @@ public class Media {
 
     public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public ImageIcon getArtWork() {
+        return artWork;
     }
 }

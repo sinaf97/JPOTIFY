@@ -130,4 +130,11 @@ public class Library {
                 result.add(song);
         return result;
     }
+
+    public MediaList getAllSongsInPlaylist(){
+        MediaList result = new MediaList("All Songs");
+        for (Media song:songs)
+            result.addSong(song);
+        return result;
+    }
 }
