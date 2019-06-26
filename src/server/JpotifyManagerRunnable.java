@@ -2,7 +2,9 @@ package server;
 
 import Logic.Media;
 import Logic.MediaList;
+import Logic.Status;
 import Logic.User;
+import java.io.ObjectOutputStream;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -205,7 +207,9 @@ public class JpotifyManagerRunnable implements Runnable{
                     }
                 }
             }
-            case "play":                       //command2: songName, command3: time
+            case "play": {                     //command2: songName, command3: time
+
+            }
             case "pause": {
                 String friends = addFriends(s);
                 MyThread thread = new MyThread("Thread", friends, command1, command2, command3);
@@ -323,12 +327,12 @@ public class JpotifyManagerRunnable implements Runnable{
             Integer userPortNumbers = this.socketServer.getUserPortNumbers().get(friend);
 
             Socket clientSocket = null;
-            PrintWriter out = null;
+            ObjectOutputStream out = null;
 
             try {
                 clientSocket = new Socket(userHostNames, userPortNumbers);
                 // create our IO streams
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
+                out = new ObjectOutputStream(clientSocket.getOutputStream());
 
             } catch (IOException e) {
                 System.exit(1);
