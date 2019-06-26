@@ -1,5 +1,7 @@
 package server;
 
+import Logic.Media;
+import Logic.MediaList;
 import Logic.User;
 
 import java.io.BufferedReader;
@@ -42,6 +44,9 @@ public class JpotifyManagerRunnable implements Runnable{
             PrintWriter out = new PrintWriter(this.clientSocket.getOutputStream(), true);
             String command = in.readLine();
             manageCommand(command, in, out);
+            if (this.returnCommand != null) {
+                out.println(this.returnCommand);
+            }
 
 
         } catch (IOException e) {
@@ -56,6 +61,8 @@ public class JpotifyManagerRunnable implements Runnable{
                 this.returnCommand = readCommand_1st(this.commands[1]);
             } else if (this.commands.length == 3) {
                 this.returnCommand = readCommand_2nd(this.commands[1], this.commands[2], in, out);
+            } else if (this.commands.length == 4) {
+                this.returnCommand = readCommand_3rd(this.commands[1], this.commands[2], this.commands[3]);
             }
         }
     }
@@ -83,34 +90,28 @@ public class JpotifyManagerRunnable implements Runnable{
                 s = s + "&" + user.getName();
             }
         }
-        return null;
+        return s.substring(1);
     }
 
     private String readCommand_1st(String command) {
-        String s;
+        String s = "";
         switch (command) {
             case "getOnlineFriends": {
-                s = "onlineFriends&";
                 return addFriends(s);
             }
             case "close": {
-                s = command + "&";
                 return addFriends(s);
             }
-            case "open": {
-                s = command + "&";
-                return addFriends(s);
-            }
-            case "singUp": {
-                s = command + "&";
-                return addFriends(s);
-            }
-            case "login": {
-                s = command + "&";
-                return addFriends(s);
-            }
+//            case "open": {
+//                return addFriends(s);
+//            }
+//            case "singUp": {
+//                return addFriends(s);
+//            }
+//            case "login": {
+//                return addFriends(s);
+//            }
             case "logout": {
-                s = command + "&";
                 return addFriends(s);
             }
         }
@@ -121,40 +122,64 @@ public class JpotifyManagerRunnable implements Runnable{
         String s = null;
         switch (command1) {
             case "Download": {                  //userName(who order)&Download&userName(who wanted SharedList)
-                s = downloadManager();
-                User user2 = findUser(command2);
+                String[] userName_songName = command2.split("_");
+                User user2 = findUser(userName_songName[0]);
+                s = downloadManager(user2.getUsername(), userName_songName[1]);
                 return s;
             }
-            case "Upload": {
-                User user2 = findUser(command2);
-                if(uploadManager(in)) {
-                    return "Process done successfully.";
+            case "Upload": {                    //command2: songName
+                String songName = command2;
+                if(uploadManager(in, songName)) {
+                    return "Process done successfully";
                 } else {
-                    return "Process is not successfully";
+                    return "Process Did Not complete successfully";
                 }
 
             }
-            case "SharedList": {
-                switch (command2) {
-                    case "getList":
-                    {
-                        //return the lists
-                        return s;
-                    }
-                    case "getSongs":
-                    {
-                        //return the songs
-                        return s;
+            case "sharedPlaylist": {            //command2 : getList
+                s = command1 + "&";
+                for (String userName : this.user.getFriends().getFriendsList().keySet()) {
+                    if (this.socketServer.getSharedPlaylist().containsKey(userName)) {
+                        s = s + socketServer.getSharedPlaylist().get(userName).getName() + "&";
                     }
                 }
-            }
+                return s;
+                    }
         }
         return s;
     }
 
-    private String downloadManager() {
+    private String readCommand_3rd(String command1, String command2, String command3) {
+        String s = null;
+        switch (command1) {
+            case "sharedPlaylist": {
+                switch (command2) {
+                    case "getSongs": { //command3: the user of who we want to see his sharedPlaylist
+                        s = command1 + "&" + "songs" + "&";
+                        User user2 = findUser(command3);
+                        if ( user2 != null) {
+                            for (Media media : this.socketServer.getSharedPlaylist().get(user2.getUsername()).getSongs()) {
+                                s += media.getName();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-        File file = new File("Mohammad.txt");
+        return s;
+    }
+
+
+    /**
+     *
+     * @param userName the name of the SharedList in the memory of server computer; is a folder
+     * @param songName the name of the song (has the prefix of media)
+     * @return link for download
+     */
+    private String downloadManager(String userName, String songName) {
+
+        File file = new File(userName + "\\" + songName);
         FileInputStream inMyComputer = null;
         String music = "";
 
@@ -188,8 +213,16 @@ public class JpotifyManagerRunnable implements Runnable{
 
     }
 
-    private Boolean uploadManager(BufferedReader in) {
-        File file = new File("Mohammad(socket).txt");
+    /**
+     *
+     * @param in the BufferedReader of user
+     * @param songName the name of the song (has the prefix of media)
+     * @return
+     */
+    private Boolean uploadManager(BufferedReader in, String songName) {
+
+        //the name of the sharedList folder
+        File file = new File(this.user.getUsername() + "\\" + songName);
         FileOutputStream inMyComputer = null;
 
         try {
@@ -204,8 +237,9 @@ public class JpotifyManagerRunnable implements Runnable{
             try {
                 while ((c = in.read()) != '\0') {
                     inMyComputer.write((char) c);
-                    return true;
                 }
+                return true;
+
             } catch (IOException io) {
                 io.printStackTrace();
             }

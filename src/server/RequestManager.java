@@ -6,6 +6,7 @@ import Logic.User;
 import java.util.ArrayList;
 
 public class RequestManager {
+    /*
 
     private String[] commands;
     private String returnCommand;
@@ -56,9 +57,6 @@ public class RequestManager {
             case "logout": {
 
             }
-            case "close": {
-
-            }
         }
         return s;
     }
@@ -91,4 +89,5 @@ public class RequestManager {
     public String getReturnCommand() {
         return returnCommand;
     }
+    */
 }
