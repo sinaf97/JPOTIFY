@@ -11,21 +11,23 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-public class SharedPlaylist_GetList_Client implements ServerInformation {
+public class SharedPlaylist_GetSongsName_Client implements ServerInformation {
 
     private User user;
 
-    public SharedPlaylist_GetList_Client(User user) {
+    public SharedPlaylist_GetSongsName_Client(User user) {
         this.user = user;
     }
 
     /**
-     * <p>when a user call this class, the server search in his/her friends. </p>
+     * <p>when a user call this class, the server search in his/her friends sharedPlayList. </p>
      *
-     * @return just return a array "userName" of his/her user friends who has song in sharableList
+     * @param userName your friend's userName, who you want to see his/her songsName in
+     *                 his/her sharedPlayList.
+     * @return just return a array "songsName" of his/her user friends who you want.
      * @throws IOException
      */
-    public ArrayList <String> getListAction() throws IOException, ClassNotFoundException {
+    public ArrayList <String> getSongsNameAction(String userName) throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
@@ -41,16 +43,16 @@ public class SharedPlaylist_GetList_Client implements ServerInformation {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&sharedPlaylist&" + "getList";
+        String order = this.user.getUsername() + "&sharedPlaylist&" + "getSongsName&" + userName;
         out.writeObject(order);
 
-        ArrayList <String> userNameOfFriends = new ArrayList<>();
+        ArrayList <String> songsNameOfOneFriends = new ArrayList<>();
         String name;
         while (!(name = (String)in.readObject()).equals("-1")) {
-            userNameOfFriends.add(name);
+            songsNameOfOneFriends.add(name);
         }
 
-        return userNameOfFriends;
+        return songsNameOfOneFriends;
 
     } // end main method
 

@@ -1,7 +1,5 @@
 package server;
 
-import Logic.Media;
-import Logic.MediaList;
 import Logic.User;
 
 import java.io.IOException;
@@ -13,7 +11,7 @@ public class SocketServer {
     private final int portNumber = 44444;
     private ServerSocket serverSocket = null;
     private HashMap <String, User> users = new HashMap<>(); //String: userName, User
-    private HashMap <String, MediaList> sharedPlaylist = new HashMap<>(); //String: userName, sharedPlaylist
+    private HashMap <String, UserFolder> sharedPlaylist = new HashMap<>(); //String: userName, sharedPlaylist
     private HashMap <User, String> userHostNames = new HashMap<>();
     private HashMap <User, Integer> userPortNumbers = new HashMap<>();
 
@@ -38,8 +36,8 @@ public class SocketServer {
     public void addUser(User user) {
         if(!this.users.containsKey(user.getUsername()))  {
             this.users.put(user.getUsername(), user);
-            MediaList mediaList = new MediaList(user.getUsername());
-            this.sharedPlaylist.put(user.getUsername(), mediaList);
+            UserFolder userFolder = new UserFolder(user.getUsername());
+            this.sharedPlaylist.put(user.getUsername(), userFolder);
         }
     }
 
@@ -56,24 +54,24 @@ public class SocketServer {
 
     public void updateUser(User user) {
         if(this.users.containsKey(user.getUsername()))  {
-
+            this.users.put(user.getUsername(), user);
         }
     }
 
 
-    public void addTosharedPlaylist(String username, Media media) {
+    public void addToSharedPlaylist(String username, String songName) {
         if (sharedPlaylist.containsKey(username))
-        this.sharedPlaylist.get(username).addSong(media);
+        this.sharedPlaylist.get(username).addSongName(songName);
     }
 
-    public void removeFromsharedPlaylist(String userName, Media media) {
+    public void removeFromSharedPlaylist(String userName, String songName) {
         if (sharedPlaylist.containsKey(userName)) {
-            this.sharedPlaylist.get(userName).removeSong(media);
+            this.sharedPlaylist.get(userName).removeSongName(songName);
         }
     }
 
-    public HashMap <String, MediaList> getSharedPlaylist() {
-        return this.sharedPlaylist;
+    public HashMap<String, UserFolder> getSharedPlaylist() {
+        return sharedPlaylist;
     }
 
     public void addToUserHostNames(User user, String hostName) {

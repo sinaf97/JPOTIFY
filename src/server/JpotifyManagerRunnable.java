@@ -92,7 +92,7 @@ public class JpotifyManagerRunnable implements Runnable{
             } else if (this.commands.length == 3) {
                 readCommand_2nd(this.commands[1], this.commands[2], in, out);
             } else if (this.commands.length == 4) {
-                readCommand_3rd(this.commands[1], this.commands[2], this.commands[3]);
+                readCommand_3rd(this.commands[1], this.commands[2], this.commands[3], out);
             }
         }
     }
@@ -202,9 +202,8 @@ public class JpotifyManagerRunnable implements Runnable{
         }
     }
 
-    private String readCommand_2nd(String command1, String command2,
+    private void readCommand_2nd(String command1, String command2,
                                    ObjectInputStream in, ObjectOutputStream out) throws IOException {
-        String s = "";
         switch (command1) {
             case "Download": {                  //userName(who order)&Download&userName(who wanted SharedList)
                 String[] userName_songName = command2.split("_");
@@ -214,6 +213,7 @@ public class JpotifyManagerRunnable implements Runnable{
             }
             case "Upload": {                    //command2: songName
                 String songName = command2;
+                this.socketServer.getSharedPlaylist().get(this.user.getUsername()).addSongName(songName);
                 if(uploadManager(in, songName)) {
                     out.writeObject("Process done successfully");
                 } else {
@@ -222,38 +222,42 @@ public class JpotifyManagerRunnable implements Runnable{
                 break;
             }
             case "sharedPlaylist": {            //command2 : getList
-                s = command1 + "&";
                 for (String userName : this.user.getFriends().getFriendsList().keySet()) {
-                    if (this.socketServer.getSharedPlaylist().containsKey(userName)) {
-                        s = s + socketServer.getSharedPlaylist().get(userName).getName() + "&";
+                    if (!this.socketServer.getSharedPlaylist().get(userName).getSongs().isEmpty()) {
+                        out.writeObject(userName);
                     }
                 }
-                return s;
-                    }
+                out.writeObject("-1");
+                break;
+            }
+            case "removeFromSharedPlaylist": {           //command2: songName
+                String songName = command2;
+                this.socketServer.getSharedPlaylist().get(this.user.getUsername()).removeSongName(songName);
+                if (deleteManager(songName)) {
+                    out.writeObject("File deleted successfully");
+                } else {
+                    out.writeObject("Failed to delete the file");
+                }
+                break;
+            }
         }
-        return s;
     }
 
-    private String readCommand_3rd(String command1, String command2, String command3) {
-        String s = null;
-        switch (command1) {
-            case "sharedPlaylist": {
-                switch (command2) {
-                    case "getSongs": { //command3: the user of who we want to see his sharedPlaylist
-                        s = command1 + "&" + "songs" + "&";
-                        User user2 = findUser(command3);
-                        if ( user2 != null) {
-                            for (Media media : this.socketServer.getSharedPlaylist().get(user2.getUsername()).getSongs()) {
-                                s += media.getName();
-                            }
-                        }
-                    }
-                }
+    /**
+     *
+     * @param command1 sharedPlaylist
+     * @param command2 getSongsName
+     * @param command3 the userName of that friend, who we want to see songsName in his/her sharedPlaylist
+     * @param out ObjectOutputStream
+     */
+    private void readCommand_3rd(String command1, String command2, String command3, ObjectOutputStream out) throws IOException {
+        if ((this.user.getFriends().getFriendsList().containsKey(command3) &&
+                (!this.socketServer.getSharedPlaylist().get(command3).getSongs().isEmpty()))){
+            for (String songName: this.socketServer.getSharedPlaylist().get(command3).getSongs()) {
+               out.writeObject(songName);
             }
-
         }
-
-        return s;
+        out.writeObject("-1");
     }
 
 
@@ -304,6 +308,12 @@ public class JpotifyManagerRunnable implements Runnable{
             e.printStackTrace();
             return false;
         }
+    }
+
+    private Boolean deleteManager(String songName) {
+        File file = new File(this.user.getUsername() + "\\" + songName);
+
+        return file.delete();
     }
 
     /**
@@ -374,13 +384,6 @@ public class JpotifyManagerRunnable implements Runnable{
     }
     
 }
-
-
-
-
-
-
-
 
 
 

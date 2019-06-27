@@ -1,31 +1,36 @@
 package Logic.userCommands;
 
+import Logic.SongSerial;
 import Logic.User;
 
 import java.io.PrintWriter;
+import java.io.FileInputStream;
+import java.io.File;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.io.FileNotFoundException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
-public class SharedPlaylist_GetList_Client implements ServerInformation {
+public class RemoveFromSharedPlaylist_Client implements ServerInformation{
 
     private User user;
 
-    public SharedPlaylist_GetList_Client(User user) {
+    public RemoveFromSharedPlaylist_Client(User user) {
         this.user = user;
     }
 
     /**
-     * <p>when a user call this class, the server search in his/her friends. </p>
      *
-     * @return just return a array "userName" of his/her user friends who has song in sharableList
+     * @param songName the name of song that user want to delete it
+     * @return (if process be successfully: return true ) vs (else: return false)
      * @throws IOException
+     * @throws ClassNotFoundException
      */
-    public ArrayList <String> getListAction() throws IOException, ClassNotFoundException {
+    public Boolean removeFromSharedPlaylist(String songName) throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
@@ -41,16 +46,10 @@ public class SharedPlaylist_GetList_Client implements ServerInformation {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&sharedPlaylist&" + "getList";
+        String order = this.user.getUsername() + "&removeFromSharedPlaylist&"  + songName;
         out.writeObject(order);
 
-        ArrayList <String> userNameOfFriends = new ArrayList<>();
-        String name;
-        while (!(name = (String)in.readObject()).equals("-1")) {
-            userNameOfFriends.add(name);
-        }
-
-        return userNameOfFriends;
+        return ((String)in.readObject()).equals("File deleted successfully");
 
     } // end main method
 

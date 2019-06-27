@@ -22,7 +22,6 @@ public class Close_Client implements ServerInformation {
      *     "close" and "logout" classes are just the same.
      * </p>
      *
-     * @return a array name of user's online friends, to say them this user get offline
      * @throws IOException
      */
     public void closeAction() throws IOException {

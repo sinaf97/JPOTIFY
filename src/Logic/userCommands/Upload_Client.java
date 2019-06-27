@@ -24,6 +24,7 @@ public class Upload_Client implements ServerInformation{
     }
 
     /**
+     * in fact, by this class, a user add a song to his/her sharedPlayList
      *
      * @param file the path of the media in the user computer
      * @throws IOException
