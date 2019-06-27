@@ -2,12 +2,12 @@ package UI;
 
 import Logic.User;
 import Logic.userCommands.CreateAccount_Client;
+import Logic.userCommands.GetOnline_Client;
+import Logic.userCommands.TryUserName_Client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
+
 
 public class LoginPage extends JFrame {
     private JPanel main;
@@ -39,7 +39,24 @@ public class LoginPage extends JFrame {
             /*
             codes for logging in with server auth
              */
+            System.out.println("login button clicked");
+            try {
+                TryUserName_Client temp = new TryUserName_Client(input.getText());
+                boolean answer = temp.tryUserNameAction();
+                if (answer) {
+                    User attempt = new GetOnline_Client(new User(input.getText(),"fake")).getMyselfAction();
+                    attempt.setUi(new JpotifyUI(attempt));
+                    setVisible(false);
+                }
+                else{
+                    showError("Username already exists.");
+                }
+
+            }catch (Exception e1){
+                System.out.println(e);
+            }
         });
+
         signup.addActionListener(e -> {
             makeSignUpPage();
 

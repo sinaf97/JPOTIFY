@@ -2,7 +2,7 @@ package server;
 
 import Logic.*;
 
-import javax.jws.soap.SOAPBinding;
+
 import java.io.ObjectOutputStream;
 
 import java.io.BufferedReader;
