@@ -163,7 +163,7 @@ public class JpotifyManagerRunnable implements Runnable{
                 break;
             }
 
-            case "AddFriend": {
+            case "addFriend": {
                 String friendUserName = (String) in.readObject();
                 User friend = findUser(friendUserName);
                 if (friend != null) {
@@ -171,6 +171,18 @@ public class JpotifyManagerRunnable implements Runnable{
                     friend.getFriends().addFriend(this.user);
                     out.writeObject("True");
                     out.writeObject(friend);
+                } else {
+                    out.writeObject("False");
+                }
+                break;
+            }
+
+            case "removeFriend": {
+                User friend = (User) in.readObject();
+                if (this.socketServer.getUsers().containsKey(friend.getUsername())) {
+                    this.user.getFriends().removeFriend(friend);
+                    friend.getFriends().removeFriend(this.user);
+                    out.writeObject("True");
                 } else {
                     out.writeObject("False");
                 }

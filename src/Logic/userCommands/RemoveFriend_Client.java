@@ -10,25 +10,25 @@ import java.net.Socket;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
-public class AddFriend_Client implements ServerInformation {
+public class RemoveFriend_Client implements ServerInformation {
 
     private User yourUser;
-    private String yourFriendUserName;
+    private User yourFriendUser;
 
-    public AddFriend_Client(User yourUser, String yourFriendUserName) {
+    public RemoveFriend_Client(User yourUser, User yourFriendUser) {
         this.yourUser = yourUser;
-        this.yourFriendUserName = yourFriendUserName;
+        this.yourFriendUser = yourFriendUser;
     }
 
     /**
      * at first, user call this class to get allowance.
      *
-     * @return <p>if yourFriendUserName be exist, this function find that user and return it and then,"you
-     *          should assign this user to your friendsList and assign yourself to his/her friendsList".</p>
+     * @return <p>if yourFriendUser be exist, return "true" and then, "you
+     *          should remove this user from your friendsList and remove yourself from his/her friendsList".</p>
      *          <p>else, this function return null</p>
      * @throws IOException
      */
-    public User makeFriend() throws IOException, ClassNotFoundException {
+    public Boolean breakUp() throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
@@ -44,16 +44,12 @@ public class AddFriend_Client implements ServerInformation {
             System.exit(1);
         } //end try-catch
 
-        String order = this.yourUser.getUsername() + "&addFriend";
+        String order = this.yourUser.getUsername() + "&removeFriend";
         out.writeObject(order);
 
-        out.writeObject(this.yourFriendUserName);
+        out.writeObject(this.yourFriendUser);
 
-        if (((String)in.readObject()).equals("True")) {
-            return (User)in.readObject();
-        } else {
-            return null;
-        }
+        return ((String) in.readObject()).equals("True");
 
     } // end main method
 
