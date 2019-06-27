@@ -99,6 +99,13 @@ public class Media implements Serializable{
             album = "Unknown";
 
     }
+    public boolean getShared(){
+        return shared;
+    }
+
+    public void setShared(boolean shared){
+        this.shared = shared;
+    }
 
     public Boolean getFavorite() {
         return favorite;
@@ -149,5 +156,6 @@ public class Media implements Serializable{
             throw new Exception();
         }
     }
+
 
 }

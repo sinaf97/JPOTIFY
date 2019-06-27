@@ -7,6 +7,8 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
 
+
+import Logic.userCommands.Close_Client;
 import UI.centerElements.SongsUI;
 
 
@@ -108,7 +110,21 @@ public class Header extends JPanel {
         add(searchArea,BorderLayout.EAST);
         JButton addFriend = new JButton("Add Friend");
         addFriend.addActionListener(e -> new AddFriendUI());
-        add(addFriend);
+        JButton logout = new JButton("Log out");
+        addFriend.addActionListener(e -> {
+            Close_Client close = new Close_Client(jpotifyUI.getUser());
+            try {
+                jpotifyUI.user.getStatus().setStatus(false);
+                close.closeAction();
+            }catch (Exception e1){}
+            jpotifyUI.setVisible(false);
+            new LoginPage();
+        });
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.add(logout);
+        buttonContainer.add(addFriend);
+        buttonContainer.setBackground(Color.GRAY);
+        add(buttonContainer);
 
 
 

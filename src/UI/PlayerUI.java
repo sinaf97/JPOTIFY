@@ -83,7 +83,11 @@ public class PlayerUI extends JPanel {
             if(play.getToolTipText().equals("Pause")) {
                 jpotifyUI.user.setStatus(new Status(song.getName(),false));
                 Pause_Client toServer = new Pause_Client(jpotifyUI.getUser());
-                //toServer.pauseAction(jpotifyUI.user);
+                try {
+                    toServer.pauseAction();
+                }catch (Exception e1){
+                    System.out.println(e1);
+                }
                 play.setToolTipText("Play");
                 play.setIcon(playIcon);
                 player.pause();
@@ -93,7 +97,9 @@ public class PlayerUI extends JPanel {
             else {
                 jpotifyUI.user.setStatus(new Status(song.getName(),true));
                 Play_Client toServer = new Play_Client(jpotifyUI.getUser());
-//                toServer.playAction(jpotifyUI.user);
+                try {
+                    toServer.playAction();
+                }catch (Exception e2){}
                 play.setToolTipText("Pause");
                 play.setIcon(pauseIcon);
                 playerSlider.sliderThread.setPause(false);

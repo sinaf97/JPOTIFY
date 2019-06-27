@@ -121,14 +121,22 @@ public class SongsUI extends JPanel{
 
             JButton addToPlaylist = new JButton("+");
             addToPlaylist.addActionListener(e -> addSongToPlaylist(song));
-
-            JButton upload = new JButton("Share");
-            upload.addActionListener(e -> {
-                SongSerial toUpload = new SongSerial(new File(song.getDir()));
+            JButton upload = null;
+            if(!song.getShared()) {
+                upload = new JButton("Share");
+                JButton finalUpload = upload;
+                upload.addActionListener(e -> {
+                    SongSerial toUpload = new SongSerial(new File(song.getDir()));
                 /*
                 code to upload the file
                  */
-            });
+                song.setShared(true);
+                finalUpload.setText("Shared");
+                });
+            }
+            else{
+                upload = new JButton("Shared");
+            }
 
 
             setLayout(new GridLayout(1,2));
@@ -209,13 +217,22 @@ public class SongsUI extends JPanel{
                 jpotifyUI.getMain().updateUI();
             });
 
-            JButton upload = new JButton("Share");
-            upload.addActionListener(e -> {
-                SongSerial toUpload = new SongSerial(new File(song.getDir()));
+            JButton upload = null;
+            if(!song.getShared()) {
+                upload = new JButton("Share");
+                upload.addActionListener(e -> {
+                    SongSerial toUpload = new SongSerial(new File(song.getDir()));
                 /*
                 code to upload the file
                  */
-            });
+                    song.setShared(true);
+
+                });
+                upload.setText("Shared");
+            }
+            else{
+                upload = new JButton("Shared");
+            }
 
 
             setLayout(new GridLayout(1,2));
