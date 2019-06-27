@@ -86,7 +86,7 @@ public class JpotifyManagerRunnable implements Runnable{
 
     private void manageCommand(String command, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
         this.commands = command.split("&");
-        if ((findUser(this.commands[0]) != null) && (this.commands.length > 1)) {
+        if ((findClientUser(this.commands[0]) != null) && (this.commands.length > 1)) {
             if (this.commands.length == 2) {
                 readCommand_1st(this.commands[1], in, out);
             } else if (this.commands.length == 3) {
@@ -97,10 +97,19 @@ public class JpotifyManagerRunnable implements Runnable{
         }
     }
 
-    private User findUser(String command) {
+    private User findClientUser(String command) { //String: userName
         for (User u:socketServer.getUsers().values()) {
             if (u.getUsername().equals(command)) {
                 this.user = u;
+                return u;
+            }
+        }
+        return null;
+    }
+
+    private User findUser(String command) {  //String: userName
+        for (User u:socketServer.getUsers().values()) {
+            if (u.getUsername().equals(command)) {
                 return u;
             }
         }
@@ -142,6 +151,7 @@ public class JpotifyManagerRunnable implements Runnable{
                 thread.start();
                 break;
             }
+
             case "play":
             case "pause": {
                 User user = (User) in.readObject();
@@ -150,6 +160,20 @@ public class JpotifyManagerRunnable implements Runnable{
                 ArrayList <User> friends = addFriends();
                 MyThread thread = new MyThread("Thread", friends, command);
                 thread.start();
+                break;
+            }
+
+            case "AddFriend": {
+                String friendUserName = (String) in.readObject();
+                User friend = findUser(friendUserName);
+                if (friend != null) {
+                    this.user.getFriends().addFriend(friend);
+                    friend.getFriends().addFriend(this.user);
+                    out.writeObject("True");
+                    out.writeObject(friend);
+                } else {
+                    out.writeObject("False");
+                }
                 break;
             }
 
@@ -174,6 +198,7 @@ public class JpotifyManagerRunnable implements Runnable{
                 String[] userName_songName = command2.split("_");
                 User user2 = findUser(userName_songName[0]);
                 downloadManager(user2.getUsername(), userName_songName[1], out);
+                break;
             }
             case "Upload": {                    //command2: songName
                 String songName = command2;
@@ -182,7 +207,7 @@ public class JpotifyManagerRunnable implements Runnable{
                 } else {
                     out.writeObject("Process Did Not complete successfully");
                 }
-
+                break;
             }
             case "sharedPlaylist": {            //command2 : getList
                 s = command1 + "&";
