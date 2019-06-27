@@ -1,5 +1,6 @@
 package Logic.userCommands;
 
+import Logic.SongSerial;
 import Logic.User;
 
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.FileNotFoundException;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 public class Upload_Client implements ServerInformation{
 
@@ -24,52 +26,32 @@ public class Upload_Client implements ServerInformation{
     /**
      *
      * @param file the path of the media in the user computer
-     * @param songName the unique name of that song
      * @throws IOException
      */
-    public Boolean upload(File file, String songName) throws IOException {
+    public Boolean upload(File file) throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
-        BufferedReader in = null;
+        ObjectInputStream in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new ObjectInputStream((clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&Upload&"  + songName;
+        String order = this.user.getUsername() + "&Upload&"  + file.getName();
         out.writeObject(order);
 
-        FileInputStream inMyComputer = null;
+        SongSerial songFile = new SongSerial(file);
 
-        try {
-            try {
-                inMyComputer = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                System.out.println(e);
-            }
+        out.writeObject(songFile);
 
-            int c;
-            String music = "";
-            while ((c = inMyComputer.read()) != -1) {
-                music += (char)c;
-            }
-            out.writeObject(music);
-
-
-        } finally {
-            if (inMyComputer != null) {
-                inMyComputer.close();
-            }
-        }
-
-        return in.readLine().equals("Process done successfully");
+        return ((String)in.readObject()).equals("Process done successfully");
 
     } // end main method
 

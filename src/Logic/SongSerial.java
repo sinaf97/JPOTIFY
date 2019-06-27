@@ -3,8 +3,9 @@ package Logic;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 
-public class SongSerial {
+public class SongSerial implements Serializable {
     private String name;
     private byte[] FileInByte;
 

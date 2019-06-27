@@ -1,9 +1,6 @@
 package server;
 
-import Logic.Media;
-import Logic.MediaList;
-import Logic.Status;
-import Logic.User;
+import Logic.*;
 
 import javax.jws.soap.SOAPBinding;
 import java.io.ObjectOutputStream;
@@ -70,8 +67,14 @@ public class JpotifyManagerRunnable implements Runnable{
                     this.socketServer.addToUserPortNumbers(user, userPortNumber);
                 }
 
-            } else {
-
+            } else if(command.equals("tryUserName")) {
+                String userName =(String) in.readObject();
+                if (this.socketServer.getUsers().containsKey(userName)) {
+                    out.writeObject("True");
+                } else {
+                    out.writeObject("False");
+                }
+            }else {
                 manageCommand(command, in, out);
             }
 
@@ -120,7 +123,6 @@ public class JpotifyManagerRunnable implements Runnable{
     }
 
     private void readCommand_1st(String command ,ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
-        String s = "";
         switch (command) {
             case "getMyself": {
                 this.user.setOnline(true);
@@ -128,6 +130,7 @@ public class JpotifyManagerRunnable implements Runnable{
                 ArrayList <User> friends = addFriends();
                 MyThread thread = new MyThread("Thread", friends, "online");
                 thread.start();
+                break;
             }
 
             case "close": {
@@ -137,6 +140,7 @@ public class JpotifyManagerRunnable implements Runnable{
                 ArrayList <User> friends = addFriends();
                 MyThread thread = new MyThread("Thread", friends, "offline");
                 thread.start();
+                break;
             }
             case "play":
             case "pause": {
@@ -146,7 +150,9 @@ public class JpotifyManagerRunnable implements Runnable{
                 ArrayList <User> friends = addFriends();
                 MyThread thread = new MyThread("Thread", friends, command);
                 thread.start();
+                break;
             }
+
 //            case "open": {
 //                return addFriends(s);
 //            }
@@ -160,21 +166,21 @@ public class JpotifyManagerRunnable implements Runnable{
         }
     }
 
-    private String readCommand_2nd(String command1, String command2, ObjectInputStream in, ObjectOutputStream out) {
+    private String readCommand_2nd(String command1, String command2,
+                                   ObjectInputStream in, ObjectOutputStream out) throws IOException {
         String s = "";
         switch (command1) {
             case "Download": {                  //userName(who order)&Download&userName(who wanted SharedList)
                 String[] userName_songName = command2.split("_");
                 User user2 = findUser(userName_songName[0]);
-                s = downloadManager(user2.getUsername(), userName_songName[1]);
-                return s;
+                downloadManager(user2.getUsername(), userName_songName[1], out);
             }
             case "Upload": {                    //command2: songName
                 String songName = command2;
                 if(uploadManager(in, songName)) {
-                    return "Process done successfully";
+                    out.writeObject("Process done successfully");
                 } else {
-                    return "Process Did Not complete successfully";
+                    out.writeObject("Process Did Not complete successfully");
                 }
 
             }
@@ -220,38 +226,13 @@ public class JpotifyManagerRunnable implements Runnable{
      * @param songName the name of the song (has the prefix of media)
      * @return link for download
      */
-    private String downloadManager(String userName, String songName) {
+    private void downloadManager(String userName, String songName, ObjectOutputStream out) throws IOException {
 
         File file = new File(userName + "\\" + songName);
-        FileInputStream inMyComputer = null;
-        String music = "";
 
-        try {
-            try {
-                inMyComputer = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+        SongSerial songFile = new SongSerial(file);
 
-            int c;
-            while ((c = inMyComputer.read()) != -1) {
-                music += (char)c;
-            }
-
-        } catch (IOException io) {
-            System.out.println(io);
-        } finally {
-            if (inMyComputer != null) {
-                try {
-                    inMyComputer.close();
-                } catch (IOException io) {
-                    System.out.println(io);
-                    return music;
-                }
-            }
-        }
-
-        return null;
+        out.writeObject(songFile);
 
     }
 
@@ -274,30 +255,18 @@ public class JpotifyManagerRunnable implements Runnable{
                 e.printStackTrace();
             }
 
-//                out.write(-1);
-            String music = (String) in.readObject();
-            try {
-                for(int i = 0; i < music.length(); i++) {
-                    inMyComputer.write(music.charAt(i));
-                }
-                return true;
+            SongSerial songFile = (SongSerial) in.readObject();
 
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
+            byte[] FileInByte = songFile.getFileInByte();
+
+            inMyComputer.write(FileInByte);
+            inMyComputer.close();
+            return true;
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (inMyComputer != null) {
-                    inMyComputer.close();
-                }
-            }
-            catch (IOException io) {
-                io.printStackTrace();
-            }
+            return false;
         }
-        return false;
     }
 
     /**

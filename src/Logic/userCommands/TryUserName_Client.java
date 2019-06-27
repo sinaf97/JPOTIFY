@@ -8,42 +8,49 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 public class TryUserName_Client implements ServerInformation {
 
-    private User user;
+    private String userName;
 
-    public TryUserName_Client(User user) {
-        this.user = user;
+    public TryUserName_Client(String userName) {
+        this.userName = userName;
     }
 
     /**
+     * when a user want to logIn to Jpotify, he/she enter his/her userName and sent it to server.
+     * server check it.
      *
-     * @return a array name of user's online friends, to say them this user get offline
+     * <p> Warning: by this class, user doesn't get online...
+     * after he/she get true from server, he/she can call "GetOnline" class. </p>
+     *
+     * @return (if server find that userName: return true), (else: return false)
+     *
      * @throws IOException
      */
-    public void LogoutAction() throws IOException {
+    public Boolean tryUserNameAction() throws IOException, ClassNotFoundException {
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
+        ObjectInputStream in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new ObjectInputStream((clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
         } //end try-catch
 
-        String order = this.user.getUsername() + "&logout";
+        String order = "tryUserName";
         out.writeObject(order);
 
-        out.writeObject(this.user);
+        out.writeObject(this.userName);
 
-//
-//        return commandFriends.split("&");
-
+        return ((String) in.readObject()).equals("True");
 
     } // end main method
 

@@ -1,5 +1,6 @@
 package Logic.userCommands;
 
+import Logic.SongSerial;
 import Logic.User;
 
 import java.io.PrintWriter;
@@ -25,7 +26,7 @@ public class Download_Client implements ServerInformation{
      * @param file where do you like to download file in it
      * @param userNameOfYourFriend the userName of your friend that you want to download his/her file from his/her
      *                             sharePlayList
-     * @param songName the name of that song you want to download it
+     * @param songName the name of that song you want to download it (with postFix)
      *
      * @throws IOException
      */
@@ -33,13 +34,13 @@ public class Download_Client implements ServerInformation{
 
         Socket clientSocket = null;
         ObjectOutputStream out = null;
-        BufferedReader in = null;
+        ObjectInputStream in = null;
 
         try {
             clientSocket = new Socket(hostName, portNumber);
             // create our IO streams
             out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new ObjectInputStream((clientSocket.getInputStream()));
 
         } catch (IOException e) {
             System.exit(1);
@@ -57,17 +58,16 @@ public class Download_Client implements ServerInformation{
                 System.out.println(e);
             }
 
-            int c;
-            while ((c = in.read()) != '\0') {
-                inMyComputer.write((char)c);
-            }
+            SongSerial songFile = (SongSerial) in.readObject();
 
-        } finally {
-            if (inMyComputer != null) {
-                inMyComputer.close();
-            }
+            byte[] FileInByte = songFile.getFileInByte();
+
+            inMyComputer.write(FileInByte);
+            inMyComputer.close();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-
 
     } // end main method
 
