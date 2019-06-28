@@ -63,7 +63,7 @@ public class Library extends JPanel {
                     try {
                         jpotifyUI.user.getLibrary().addSong(new Media(chooser.getSelectedFile().getAbsolutePath()));
                     } catch (Exception ex) {
-                        System.out.println(ex);
+                        new ShowError("Failed to add the song.");
                     }
                 }});
             return temp;

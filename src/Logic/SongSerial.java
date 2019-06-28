@@ -29,7 +29,9 @@ public class SongSerial implements Serializable {
             FileOutputStream fout = new FileOutputStream(temp);
             fout.write(FileInByte);
             fout.close();
-        }catch (Exception e){}
+        }catch (Exception e){
+            System.out.println(e);
+        }
         return temp;
     }
 }

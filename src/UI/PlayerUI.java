@@ -52,7 +52,9 @@ public class PlayerUI extends JPanel {
                     previousIcon = new ImageIcon(scale(data, 30, 30,new Color(238,238,238)));
             }
 
-        }catch (Exception e){}
+        }catch (Exception e){
+            new ShowError("Icons files can;t be found.");
+        }
     }
 
     public PlayerUI(JpotifyUI jpotifyUI) throws FileNotFoundException, InterruptedException, JavaLayerException {
@@ -86,7 +88,7 @@ public class PlayerUI extends JPanel {
                 try {
                     toServer.pauseAction();
                 }catch (Exception e1){
-                    System.out.println(e1);
+                    new ShowError("Server did not respond.");
                 }
                 play.setToolTipText("Play");
                 play.setIcon(playIcon);
@@ -99,7 +101,9 @@ public class PlayerUI extends JPanel {
                 Play_Client toServer = new Play_Client(jpotifyUI.getUser());
                 try {
                     toServer.playAction();
-                }catch (Exception e2){}
+                }catch (Exception e2){
+                    new ShowError("Server did not respond");
+                }
                 play.setToolTipText("Pause");
                 play.setIcon(pauseIcon);
                 playerSlider.sliderThread.setPause(false);
@@ -107,7 +111,7 @@ public class PlayerUI extends JPanel {
                     player.play();
 
                 } catch (JavaLayerException e1) {
-                    e1.printStackTrace();
+                    new ShowError("Playing the song has encountered an issue.");
                 }
             }
         });
@@ -116,14 +120,15 @@ public class PlayerUI extends JPanel {
             try {
                 player.next();
             } catch (Exception e1) {
-                e1.printStackTrace();}
+                new ShowError("An error has occurred while going to the next song.");
+            }
         });
 
         previous.addActionListener(e -> {
             try {
                 player.previus();
             } catch (Exception e1) {
-                e1.printStackTrace();}
+                new ShowError("An error has occurred while going to the previus song.");}
         });
 
 
@@ -134,11 +139,15 @@ public class PlayerUI extends JPanel {
         JPanel controlsAndVolume = new JPanel();
         try {
             add(makeTitle(song), BorderLayout.WEST);
-        }catch (Exception e){}
+        }catch (Exception e){
+//            new ShowError("Song;s information failed to load.");
+        }
         playerSlider = PlayerSlider.getInstance(jpotifyUI,song);
         try {
             playerSlider.update(song.getLength());
-        }catch (Exception e){}
+        }catch (Exception e){
+//            new ShowError("Slider can't function normally");
+        }
         controlsAndVolume.setLayout(new GridLayout(1,3));
         controlsAndVolume.add(temp);
         controlsAndVolume.add(playerSlider);
@@ -146,7 +155,9 @@ public class PlayerUI extends JPanel {
         add(makeVolume(),BorderLayout.EAST);
         try {
             jpotifyUI.getFooter().addArtWork(song);
-        }catch (Exception e){}
+        }catch (Exception e){
+//            new ShowError("Artwork loading failed");
+        }
         updateUI();
     }
 
@@ -174,7 +185,7 @@ public class PlayerUI extends JPanel {
                 temp.setValue(Integer.decode(s));
             }
         } catch (IOException e1) {
-            e1.printStackTrace();
+            new ShowError("getting system volume failed.");
         }
         temp.addChangeListener(e -> {
 
@@ -182,7 +193,7 @@ public class PlayerUI extends JPanel {
             try {
                 new ProcessBuilder(commands).start();
             } catch (IOException e1) {
-                e1.printStackTrace();
+                new ShowError("Changing volume failed");
             }
         });
         result.add(new JLabel("Volume: "));
@@ -248,7 +259,9 @@ class PlayerSlider extends JPanel {
                     position = 0;
 
                 }
-            }catch (Exception e1){}
+            }catch (Exception e1){
+//                new ShowError("Initializing player slider failed.");
+            }
         });
         sliderThread = new SliderThread(this);
         sliderThread.start();
@@ -268,7 +281,7 @@ class PlayerSlider extends JPanel {
                     sleep(1000);
                     c = playerSlider.slider.getValue();
                 } catch (InterruptedException e) {
-                    System.out.println(e);
+                    new ShowError("Player slider moving failed");
                 }
                 if(pause)
                     continue;

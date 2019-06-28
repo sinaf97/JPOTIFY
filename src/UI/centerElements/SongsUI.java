@@ -5,6 +5,7 @@ import Logic.MediaList;
 import Logic.SongSerial;
 import Logic.userCommands.Upload_Client;
 import UI.JpotifyUI;
+import UI.ShowError;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
@@ -95,7 +96,7 @@ public class SongsUI extends JPanel{
                     jpotifyUI.getUser().getPlayer().setPlayerPlaylist(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist());
                     jpotifyUI.getUser().getPlayer().changeSong(jpotifyUI.getUser().getLibrary().getAllSongsInPlaylist(), j);
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    new ShowError("Playing "+song.getName()+" failed.");
                 }
             });
 
@@ -131,7 +132,9 @@ public class SongsUI extends JPanel{
                     try {
                         Upload_Client uploadFile = new Upload_Client(jpotifyUI.getUser());
                         output = uploadFile.upload(new File(song.getDir()));
-                    }catch (Exception e1){}
+                    }catch (Exception e1){
+                        new ShowError("Sharing the song failed.");
+                    }
                     if(output) {
                         song.setShared(true);
                         jpotifyUI.getUser().getLibrary().addToMedialist(song,"Shared Playlist");
@@ -176,7 +179,7 @@ public class SongsUI extends JPanel{
                     jpotifyUI.getUser().getPlayer().setPlayerPlaylist(playlist);
                     jpotifyUI.getUser().getPlayer().changeSong(playlist,j);
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    new ShowError("Playing the song failed.");
                 }
             });
 
@@ -225,13 +228,20 @@ public class SongsUI extends JPanel{
             JButton upload = null;
             if(!song.getShared()) {
                 upload = new JButton("Share");
+                JButton finalUpload = upload;
                 upload.addActionListener(e -> {
-                    SongSerial toUpload = new SongSerial(new File(song.getDir()));
-                /*
-                code to upload the file
-                 */
-                    song.setShared(true);
-
+                    boolean output = false;
+                    try {
+                        Upload_Client uploadFile = new Upload_Client(jpotifyUI.getUser());
+                        output = uploadFile.upload(new File(song.getDir()));
+                    }catch (Exception e1){
+                        new ShowError("Sharing the song failed.");
+                    }
+                    if(output) {
+                        song.setShared(true);
+                        jpotifyUI.getUser().getLibrary().addToMedialist(song,"Shared Playlist");
+                        finalUpload.setText("Shared");
+                    }
                 });
                 upload.setText("Shared");
             }

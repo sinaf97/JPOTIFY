@@ -28,8 +28,10 @@ public class AddFriendUI extends JFrame {
                 User newFriend = addFriend.makeFriend();
                 user.getFriends().addFriend(newFriend);
                 user.getUi().getRight().updateFriends();
-            }catch (Exception e1){}
-            setVisible(false);
+                setVisible(false);
+            }catch (Exception e1){
+                new ShowError("Username not found.");
+            }
         });
         container.setLayout(new BorderLayout());
         JPanel main = new JPanel();

@@ -116,7 +116,9 @@ public class Header extends JPanel {
             try {
                 jpotifyUI.user.getStatus().setStatus(false);
                 close.closeAction();
-            }catch (Exception e1){}
+            }catch (Exception e1){
+                new ShowError("Logged out");
+            }
             jpotifyUI.setVisible(false);
             new LoginPage();
         });

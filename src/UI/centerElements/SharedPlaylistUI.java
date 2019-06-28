@@ -5,6 +5,7 @@ import Logic.MediaList;
 import Logic.userCommands.SharedPlaylist_GetList_Client;
 import Logic.userCommands.SharedPlaylist_GetSongsName_Client;
 import UI.JpotifyUI;
+import UI.ShowError;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,9 @@ public class SharedPlaylistUI extends JPanel {
         SharedPlaylist_GetList_Client getList = new SharedPlaylist_GetList_Client(jpotifyUI.getUser());
         try {
             shared = getList.getListAction();
-        }catch (Exception e){}
+        }catch (Exception e){
+            new ShowError("Getting shared plalist list failed.");
+        }
         shared.add(0,"My Shared Playlist");
         for (String share: shared) {
             setLayout(new GridLayout(i++,1));
@@ -54,7 +57,9 @@ public class SharedPlaylistUI extends JPanel {
                     ArrayList<String> songs = new ArrayList<>();
                     try{
                         songs = getSongs.getSongsNameAction("Sharedplaylist");
-                    }catch (Exception e1){}
+                    }catch (Exception e1){
+                        new ShowError("Getting songs of "+Sharedplaylist+"'s shared playlisst failed.");
+                    }
                     jpotifyUI.getMain().add(new SharedSongsUI(jpotifyUI,songs,Sharedplaylist,"Shared Playlist"));
                 }
 

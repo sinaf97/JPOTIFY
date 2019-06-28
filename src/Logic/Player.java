@@ -93,7 +93,7 @@ public class Player implements Singleton, PlayerLogic ,Serializable{
             thread.player.close();
             thread.interrupt();
         }catch (Exception e){
-//            System.out.println(e);
+            System.out.println(e);
         }
         thread = null;
     }

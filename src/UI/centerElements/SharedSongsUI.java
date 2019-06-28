@@ -6,6 +6,7 @@ import Logic.SongSerial;
 import Logic.userCommands.Download_Client;
 import Logic.userCommands.Upload_Client;
 import UI.JpotifyUI;
+import UI.ShowError;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
@@ -54,7 +55,7 @@ public class SharedSongsUI extends JPanel{
                     Media newSong = new Media(temp.getAbsolutePath());
                     jpotifyUI.getUser().getPlayer().play(newSong.getDir());
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    new ShowError("Loading the song failed.");
                 }
             });
 
@@ -69,7 +70,7 @@ public class SharedSongsUI extends JPanel{
                     jpotifyUI.getUser().getLibrary().addSong(newSong);
                     jpotifyUI.getUser().getPlayer().play(newSong.getDir());
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    new ShowError("Downloading the song failed.");
                 }
             });
 

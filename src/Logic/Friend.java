@@ -25,10 +25,6 @@ public class Friend implements Serializable {
     }
     public ArrayList<User> getOnlineFriends(){
         ArrayList<User> result = new ArrayList<>();
-        /*
-        send request to server for information
-         */
-
         for (User u:friendsList.values())
             if(u.getOnline())
                 result.add(u);

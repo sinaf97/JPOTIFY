@@ -84,10 +84,6 @@ public class LoginPage extends JFrame {
         main.add(container1);
         JButton signup = new JButton("Create account");
         signup.addActionListener(e->{
-            /*
-            codes for creating account with server auth
-             */
-            System.out.println("button clicked");
             try {
                 User attempt = new User(input.getText(), inputName.getText());
                 boolean temp = new CreateAccount_Client(attempt, "localhost", 44444).confirm();
@@ -96,11 +92,11 @@ public class LoginPage extends JFrame {
                     setVisible(false);
                 }
                 else{
-                    showError("Username already exists.");
+                    new ShowError("Username already exists.");
                 }
 
             }catch (Exception e1){
-                System.out.println(e);
+                new ShowError("Logging in failed. Server did not respond");
             }
         });
         JPanel container = new JPanel();

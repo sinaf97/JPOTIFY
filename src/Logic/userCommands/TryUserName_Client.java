@@ -49,8 +49,8 @@ public class TryUserName_Client implements ServerInformation {
         out.writeObject(order);
 
         out.writeObject(this.userName);
-
-        return ((String) in.readObject()).equals("True");
+        String temp = (String) in.readObject();
+        return (temp.equals("True"));
 
     } // end main method
 
