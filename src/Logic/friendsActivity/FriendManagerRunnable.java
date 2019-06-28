@@ -14,7 +14,9 @@ public class FriendManagerRunnable implements Runnable{
 
     protected Socket clientSocket = null;
 
-    public FriendManagerRunnable(Socket clientSocket) {
+    public FriendManagerRunnable(Socket clientSocket,User user) {
+        this.user = user;
+
         this.clientSocket = clientSocket;
     }
 
@@ -33,29 +35,26 @@ public class FriendManagerRunnable implements Runnable{
         }
     }
 
-    private void manageCommand(String command, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
+    void manageCommand(String command, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
         switch (command) {
             case "offline": {
-                this.user = (User) in.readObject();
-                /*
-                            sina farahini
-                 */
-                break;
+                User friend = (User) in.readObject();
+                user.getFriends().getFriendsList().put(friend.getUsername(),friend);
+                user.getUi().getRight().updateFriends();
             }
             case "online": {
-                this.user = (User) in.readObject();
-                /*
-                            sina farahini
-                 */
+                User friend = (User) in.readObject();
+                user.getFriends().getFriendsList().put(friend.getUsername(),friend);
+                user.getUi().getRight().updateFriends();
             }
             case "play": {
-                this.user = (User) in.readObject();
+                User friend = (User) in.readObject();
                 /*
                             sina farahini
                  */
             }
             case "pause": {
-                this.user = (User) in.readObject();
+                User friend = (User) in.readObject();
                 /*
                             sina farahini
                  */
