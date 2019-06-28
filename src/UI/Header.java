@@ -109,7 +109,7 @@ public class Header extends JPanel {
         searchArea.add(cbo);
         add(searchArea,BorderLayout.EAST);
         JButton addFriend = new JButton("Add Friend");
-        addFriend.addActionListener(e -> new AddFriendUI());
+        addFriend.addActionListener(e -> new AddFriendUI(jpotifyUI.user));
         JButton logout = new JButton("Log out");
         addFriend.addActionListener(e -> {
             Close_Client close = new Close_Client(jpotifyUI.getUser());

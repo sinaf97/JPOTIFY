@@ -2,6 +2,8 @@ package UI.centerElements;
 
 import Logic.Album;
 import Logic.MediaList;
+import Logic.userCommands.SharedPlaylist_GetList_Client;
+import Logic.userCommands.SharedPlaylist_GetSongsName_Client;
 import UI.JpotifyUI;
 
 import javax.swing.*;
@@ -20,11 +22,13 @@ public class SharedPlaylistUI extends JPanel {
         this.jpotifyUI = jpotifyUI;
 //        setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         int i = 1;
-        /*
-        get users with shared playlist
-         */
-        ArrayList<MediaList> shared = new ArrayList<>();
-        for (MediaList share: shared) {
+        ArrayList<String> shared = new ArrayList<>();
+        SharedPlaylist_GetList_Client getList = new SharedPlaylist_GetList_Client(jpotifyUI.getUser());
+        try {
+            shared = getList.getListAction();
+        }catch (Exception e){}
+        shared.add(0,"My Shared Playlist");
+        for (String share: shared) {
             setLayout(new GridLayout(i++,1));
             add(new SharedplaylistUI(share));
 
@@ -36,21 +40,27 @@ public class SharedPlaylistUI extends JPanel {
 
     private class SharedplaylistUI extends JPanel {
 
-        public SharedplaylistUI(MediaList Sharedplaylist){
+        public SharedplaylistUI(String Sharedplaylist){
             super();
             setLayout(new GridLayout(1,3));
             JButton browse = new JButton("Browse Songs");
             browse.addActionListener(e -> {
                 jpotifyUI.getMain().removeAll();
                 jpotifyUI.getMain().setLayout(new FlowLayout());
-                /*
-                fetch playlist from server
-                name of the playlist is the user which has the song
-                 */
-                jpotifyUI.getMain().add(new SongsUI(jpotifyUI,Sharedplaylist,"Shared Playlist"));
+                if(Sharedplaylist.equals("My Shared Playlist"))
+                    jpotifyUI.getMain().add(new SongsUI(jpotifyUI,jpotifyUI.getUser().getLibrary().getPlaylists().get("Shared Playlist"),"Shared Playlist"));
+                else{
+                    SharedPlaylist_GetSongsName_Client getSongs = new SharedPlaylist_GetSongsName_Client(jpotifyUI.getUser().getFriends().getFriendsList().get(Sharedplaylist));
+                    ArrayList<String> songs = new ArrayList<>();
+                    try{
+                        songs = getSongs.getSongsNameAction("Sharedplaylist");
+                    }catch (Exception e1){}
+                    jpotifyUI.getMain().add(new SharedSongsUI(jpotifyUI,songs,Sharedplaylist,"Shared Playlist"));
+                }
+
             });
             add(browse);
-            add(new JLabel(Sharedplaylist.getName()));
+            add(new JLabel(Sharedplaylist));
         }
     }
 }

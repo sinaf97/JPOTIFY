@@ -3,6 +3,7 @@ package UI.centerElements;
 import Logic.Media;
 import Logic.MediaList;
 import Logic.SongSerial;
+import Logic.userCommands.Upload_Client;
 import UI.JpotifyUI;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -126,12 +127,16 @@ public class SongsUI extends JPanel{
                 upload = new JButton("Share");
                 JButton finalUpload = upload;
                 upload.addActionListener(e -> {
-                    SongSerial toUpload = new SongSerial(new File(song.getDir()));
-                /*
-                code to upload the file
-                 */
-                song.setShared(true);
-                finalUpload.setText("Shared");
+                    boolean output = false;
+                    try {
+                        Upload_Client uploadFile = new Upload_Client(jpotifyUI.getUser());
+                        output = uploadFile.upload(new File(song.getDir()));
+                    }catch (Exception e1){}
+                    if(output) {
+                        song.setShared(true);
+                        jpotifyUI.getUser().getLibrary().addToMedialist(song,"Shared Playlist");
+                        finalUpload.setText("Shared");
+                    }
                 });
             }
             else{

@@ -89,7 +89,7 @@ public class LoginPage extends JFrame {
              */
             System.out.println("button clicked");
             try {
-                User attempt = new User(username.getText(), inputName.getText());
+                User attempt = new User(input.getText(), inputName.getText());
                 boolean temp = new CreateAccount_Client(attempt, "localhost", 44444).confirm();
                 if (temp) {
                     attempt.setUi(new JpotifyUI(attempt));

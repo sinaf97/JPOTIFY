@@ -1,13 +1,17 @@
 package UI;
 
+import Logic.User;
+import Logic.userCommands.AddFriend_Client;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class AddFriendUI extends JFrame {
+        User user;
 
-
-    public AddFriendUI(){
+    public AddFriendUI(User user){
     super("Add Friend");
+    this.user = user;
     initAddFriend();
     setSize(new Dimension(200,100));
     }
@@ -19,9 +23,12 @@ public class AddFriendUI extends JFrame {
         input.setColumns(15);
         JButton add = new JButton("Add Friend");
         add.addActionListener(e ->{
-            /*
-            code for server to add friend
-             */
+            try{
+                AddFriend_Client addFriend = new AddFriend_Client(user,input.getText());
+                User newFriend = addFriend.makeFriend();
+                user.getFriends().addFriend(newFriend);
+                user.getUi().getRight().updateFriends();
+            }catch (Exception e1){}
             setVisible(false);
         });
         container.setLayout(new BorderLayout());
