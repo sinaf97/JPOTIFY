@@ -38,7 +38,8 @@ public class PlayerUI extends JPanel {
         String[] dirs = {"play","pause","next","previous"};
         try {
             for (String dir:dirs) {
-                BufferedImage bImage = ImageIO.read(new File("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/"+dir+".png"));
+//                BufferedImage bImage = ImageIO.read(new File("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/"+dir+".png"));
+                BufferedImage bImage = ImageIO.read(new File("IMG/"+dir+".png"));
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ImageIO.write(bImage, "png", bos);
                 byte[] data = bos.toByteArray();
@@ -53,7 +54,7 @@ public class PlayerUI extends JPanel {
             }
 
         }catch (Exception e){
-            new ShowError("Icons files can;t be found.");
+            new ShowError("Icons files can't be found.");
         }
     }
 
