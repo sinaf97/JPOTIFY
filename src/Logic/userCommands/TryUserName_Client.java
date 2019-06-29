@@ -30,15 +30,10 @@ public class TryUserName_Client implements ServerInformation {
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
 
-        try {
-            clientSocket = new Socket(hostName, portNumber);
-            // create our IO streams
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new ObjectInputStream((clientSocket.getInputStream()));
-
-        } catch (IOException e) {
-            System.exit(1);
-        } //end try-catch
+        clientSocket = new Socket(hostName, portNumber);
+        // create our IO streams
+        out = new ObjectOutputStream(clientSocket.getOutputStream());
+        in = new ObjectInputStream((clientSocket.getInputStream()));
 
         String order = "tryUserName";
         out.writeObject(order);

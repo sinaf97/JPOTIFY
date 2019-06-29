@@ -8,7 +8,6 @@ import Logic.userCommands.TryUserName_Client;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class LoginPage extends JFrame {
     private JPanel main;
 
@@ -21,7 +20,6 @@ public class LoginPage extends JFrame {
         makeLoginPage();
         add(main);
         setVisible(true);
-
     }
 
     private void makeLoginPage(){
@@ -49,11 +47,15 @@ public class LoginPage extends JFrame {
                     setVisible(false);
                 }
                 else{
-                    showError("Username already exists.");
+//                    new ShowError("Username already exists.");
+                    JOptionPane.showMessageDialog(main, "Username is not exist.\nTry again...",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             }catch (Exception e1){
-                System.out.println(e);
+//                new ShowError("Logging in failed. Server did not respond");
+                JOptionPane.showMessageDialog(main, "Logging in failed.\nServer did not respond",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -76,7 +78,7 @@ public class LoginPage extends JFrame {
         JTextField inputName = new JTextField();
         inputName.setColumns(20);
         JPanel container1 = new JPanel();
-        container1.setLayout(new GridLayout(2,2));
+        container1.setLayout(new GridLayout(2,2,1,7));
         container1.add(username);
         container1.add(input);
         container1.add(name);
@@ -92,11 +94,15 @@ public class LoginPage extends JFrame {
                     setVisible(false);
                 }
                 else{
-                    new ShowError("Username already exists.");
+//                    new ShowError("Username already exists.");
+                    JOptionPane.showMessageDialog(main, "Username already exists.\nTry again...",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             }catch (Exception e1){
-                new ShowError("Logging in failed. Server did not respond");
+//                new ShowError("Logging in failed. Server did not respond");
+                JOptionPane.showMessageDialog(main, "Logging in failed.\nServer did not respond",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         JPanel container = new JPanel();
@@ -106,7 +112,4 @@ public class LoginPage extends JFrame {
 
     }
 
-    public void showError(String msg){
-
-    }
 }
