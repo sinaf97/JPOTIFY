@@ -185,7 +185,8 @@ public class PlayerUI extends JPanel {
                 temp.setValue(Integer.decode(s));
             }
         } catch (IOException e1) {
-            new ShowError("getting system volume failed.");
+//            new ShowError("getting system volume failed.");
+            System.out.println("getting system volume failed.");
         }
         temp.addChangeListener(e -> {
 
@@ -193,7 +194,8 @@ public class PlayerUI extends JPanel {
             try {
                 new ProcessBuilder(commands).start();
             } catch (IOException e1) {
-                new ShowError("Changing volume failed");
+//                new ShowError("Changing volume failed");
+                System.out.println("Changing volume failed");
             }
         });
         result.add(new JLabel("Volume: "));
