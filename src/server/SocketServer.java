@@ -2,6 +2,7 @@ package server;
 
 import Logic.User;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,6 +39,7 @@ public class SocketServer {
             this.users.put(user.getUsername(), user);
             UserFolder userFolder = new UserFolder(user.getUsername());
             this.sharedPlaylist.put(user.getUsername(), userFolder);
+            (new File(user.getUsername())).mkdirs();
         }
     }
 

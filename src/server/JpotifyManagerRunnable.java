@@ -286,7 +286,6 @@ public class JpotifyManagerRunnable implements Runnable{
     private Boolean uploadManager(ObjectInputStream in, String songName) {
 
         //the name of the sharedList folder
-        (new File(this.user.getUsername())).mkdirs();
         File file = new File(this.user.getUsername() + "\\" + songName);
         FileOutputStream inMyComputer = null;
 
