@@ -31,6 +31,7 @@ public class AddFriendUI extends JFrame {
                 setVisible(false);
             }catch (Exception e1){
                 new ShowError("Username not found.");
+                System.out.println(e1);
             }
         });
         container.setLayout(new BorderLayout());

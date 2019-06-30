@@ -36,31 +36,9 @@ public class FriendManagerRunnable implements Runnable{
     }
 
     void manageCommand(String command, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
-//        switch (command) {
-//            case "offline": {
                 User friend = (User) in.readObject();
                 user.getFriends().getFriendsList().put(friend.getUsername(),friend);
                 user.getUi().getRight().updateFriends();
-//            }
-//            case "online": {
-//                User friend = (User) in.readObject();
-//                user.getFriends().getFriendsList().put(friend.getUsername(),friend);
-//                user.getUi().getRight().updateFriends();
-//            }
-//            case "play": {
-//                User friend = (User) in.readObject();
-//                /*
-//                            sina farahini
-//                 */
-//            }
-//            case "pause": {
-//                User friend = (User) in.readObject();
-//                /*
-//                            sina farahini
-//                 */
-//            }
-//        }
-
     }
 
 

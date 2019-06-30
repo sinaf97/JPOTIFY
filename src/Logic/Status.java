@@ -4,6 +4,10 @@ package Logic;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * status of a user to determine the last played situation of the user
+ */
+
 public class Status implements Serializable {
     private String songName;
     private Boolean status;

@@ -17,8 +17,6 @@ import javax.swing.JSlider;
 
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,11 +33,10 @@ public class PlayerUI extends JPanel {
     static ImageIcon nextIcon;
     static ImageIcon previousIcon;
     static{
-        String[] dirs = {"play","pause","next","previous"};
+        String[] dirs = {"play.png","pause.png","next.png","previous.png"};
         try {
             for (String dir:dirs) {
-//                BufferedImage bImage = ImageIO.read(new File("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/"+dir+".png"));
-                BufferedImage bImage = ImageIO.read(new File("IMG/"+dir+".png"));
+                BufferedImage bImage = ImageIO.read(new File("icons/"+dir));
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ImageIO.write(bImage, "png", bos);
                 byte[] data = bos.toByteArray();
@@ -54,7 +51,7 @@ public class PlayerUI extends JPanel {
             }
 
         }catch (Exception e){
-            new ShowError("Icons files can't be found.");
+//            new ShowError("Icons files can't be found.");
         }
     }
 
@@ -68,8 +65,6 @@ public class PlayerUI extends JPanel {
 
     public void initPlayer(Media song){
         removeAll();
-//        playIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/play.png", "Play");
-//        pauseIcon = new ImageIcon("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/pause.png", "Play");
         setLayout(new BorderLayout());
         JButton play = new JButton();
         play.setToolTipText("Pause");
@@ -80,8 +75,6 @@ public class PlayerUI extends JPanel {
         JButton previous = new JButton();
         previous.setToolTipText("Previous");
         previous.setIcon(previousIcon);
-//        play.setPreferredSize(new Dimension(50,50));
-//        play.setIcon(playIcon);
         play.addActionListener(e -> {
             if(play.getToolTipText().equals("Pause")) {
                 jpotifyUI.user.setStatus(new Status(song.getName(),false));

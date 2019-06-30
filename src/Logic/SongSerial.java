@@ -5,6 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 
+/**
+ * a class to transfer songs to and from server
+ */
+
 public class SongSerial implements Serializable {
     private String name;
     private byte[] FileInByte;

@@ -11,6 +11,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+/**
+ * songs added to the user are represented
+ * by this class which holds all the information
+ * needed for the songs
+ */
+
 public class Media implements Serializable{
     private String dir;
     private String name;
@@ -33,6 +39,8 @@ public class Media implements Serializable{
         }
     }
 
+
+    //constructor
     public Media(String dir) throws Exception {
         this.dir = dir;
         File song = new File(dir);
@@ -65,11 +73,29 @@ public class Media implements Serializable{
         favorite = false;
 
 }
+
+/*
+* ************************************************
+* ************************************************
+* *****loading default artwork in static mode*****
+* ************************************************
+* ************************************************
+*
+ */
     static{
-        File temp = new File("/Users/sinafarahani/Desktop/this-term/AP/project/src/icons/artwork.png");
+        File temp = new File("icons/artwork.png");
         try {
         } catch (Exception e){}
     }
+
+    /*
+     * ************************************************
+     * ************************************************
+     * ****************getters*************************
+     * ************************************************
+     * ************************************************
+     *
+     */
 
     public String getDir() {
         return dir;
@@ -90,29 +116,12 @@ public class Media implements Serializable{
         return new String[]{name, artist, album};
     }
 
-    public void checkFields(File song){
-        if(name == null)
-            name = song.getName().split("\\.")[0];
-        if(artist == null)
-            artist = "Various Artists";
-        if(album == null)
-            album = "Unknown";
-
-    }
     public boolean getShared(){
         return shared;
     }
 
-    public void setShared(boolean shared){
-        this.shared = shared;
-    }
-
     public Boolean getFavorite() {
         return favorite;
-    }
-
-    public void setFavorite(Boolean favorite) {
-        this.favorite = favorite;
     }
 
     public int getLength() {
@@ -123,16 +132,38 @@ public class Media implements Serializable{
         return artWork;
     }
 
-    public ImageIcon getScaledArtWork(int width,int height) throws Exception {
-        Icon icon = artWork;
-        BufferedImage image = new BufferedImage(icon.getIconWidth(),
-                icon.getIconHeight(),BufferedImage.TYPE_INT_RGB);
-        ByteArrayOutputStream b =new ByteArrayOutputStream();
-        ImageIO.write(image, "jpg", b );
-        byte[] imageInByte = b.toByteArray();
-        return new ImageIcon(scale(imageInByte, width, height, new Color(0, 0, 0)));
+
+    //check for fields and set default values to null ones
+    public void checkFields(File song){
+        if(name == null)
+            name = song.getName().split("\\.")[0];
+        if(artist == null)
+            artist = "Various Artists";
+        if(album == null)
+            album = "Unknown";
+
     }
 
+
+    public void setShared(boolean shared){
+        this.shared = shared;
+    }
+
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
+
+
+    /**
+     * returns an image by the size we want(it will scale the image)
+     * @param fileData
+     * @param width
+     * @param height
+     * @param back
+     * @return
+     * @throws Exception
+     */
     public static byte[] scale(byte[] fileData, int width, int height,Color back) throws Exception {
         ByteArrayInputStream in = new ByteArrayInputStream(fileData);
         try {

@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * represents friends of the user class who are other users
+ */
+
+
 public class Friend implements Serializable {
     private User user;
     private HashMap<String,User> friendsList; //String: userName, User
@@ -23,7 +28,7 @@ public class Friend implements Serializable {
         if(friendsList.containsKey(exFriend.getUsername()))
             friendsList.remove(exFriend.getUsername(),exFriend);
     }
-    public ArrayList<User> getOnlineFriends(){
+    public ArrayList<User> getOnlineFriends(){ //gets friends who are online
         ArrayList<User> result = new ArrayList<>();
         for (User u:friendsList.values())
             if(u.getOnline())
@@ -32,7 +37,7 @@ public class Friend implements Serializable {
         return result;
     }
 
-    public HashMap<String, User> getFriendsList() {
+    public HashMap<String, User> getFriendsList() { //gets all friends in a HashMap
         return friendsList;
     }
 }

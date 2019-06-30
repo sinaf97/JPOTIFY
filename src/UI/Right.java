@@ -82,19 +82,28 @@ public class Right extends JPanel {
         temp.setLayout(new GridBagLayout());
         JLabel name = new JLabel(u.getName());
         JLabel lastPlayed = null;
+        JLabel status = new JLabel();
+
         try{
             lastPlayed = new JLabel(u.getStatus().getSongName());
         }catch (Exception e){
             lastPlayed = new JLabel("Not Found");
+            status = new JLabel("-");
         }
-        JLabel status = new JLabel("Playing");
-        if(u.getStatus().getStatus())
-            status.setText("Playing");
-        else {
-            LocalTime timeTemp =  LocalTime.ofSecondOfDay(LocalDateTime.now().getSecond() - u.getStatus().getTime().getSecond());
-            String lastTime = timeTemp.getHour()>0?timeTemp.getHour()+"h":timeTemp.getMinute()+"min";
-            status.setText("Last Played " + lastTime+ " ago");
+        try {
+            if (u.getStatus().getStatus())
+                status.setText("Playing");
+            else {
+                LocalTime timeTemp =  LocalTime.ofSecondOfDay(LocalDateTime.now().getSecond() - u.getStatus().getTime().getSecond());
+                String lastTime = timeTemp.getHour()>0?timeTemp.getHour()+"h":timeTemp.getMinute()+"min";
+                status.setText("Last Played " + lastTime+ " ago");
+            }
+        }catch (Exception e2){
+            status.setText("Nothing Played yet");
+            System.out.println(e2);
         }
+
+
         if(isOnline) {
             name.setForeground(new Color(30, 215, 96));
             lastPlayed.setForeground(Color.white);

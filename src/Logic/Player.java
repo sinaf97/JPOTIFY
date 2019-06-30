@@ -22,7 +22,7 @@ public class Player implements Singleton, PlayerLogic ,Serializable{
     private AdvancedPlayer player;
     private MediaList playerPlaylist;
     private int playerPlaylistNumber = 0;
-    private FileInputStream input;
+    private String songName;
     private String dir;
     private PlayerThread thread;
     private boolean playing;
@@ -169,5 +169,9 @@ public class Player implements Singleton, PlayerLogic ,Serializable{
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

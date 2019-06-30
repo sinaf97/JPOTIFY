@@ -3,6 +3,10 @@ package Logic;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * base class of all playlists such as playlists,albums,shared plauylist,favorite songs
+ */
+
 public class MediaList implements Serializable {
     private ArrayList<Media> songs;
     private String name;

@@ -1,12 +1,15 @@
 package UI;
 
 import Logic.User;
+import Logic.userCommands.Close_Client;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class JpotifyUI extends JFrame {
@@ -20,6 +23,20 @@ public class JpotifyUI extends JFrame {
     public JpotifyUI(User user) throws InvalidDataException, IOException, UnsupportedTagException, JavaLayerException, InterruptedException {
         super();
         this.user = user;
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Logging out");
+                user.getStatus().setStatus(false);
+                try {
+                    new Close_Client(user).closeAction();
+                }catch (Exception e1){
+                    System.out.println("couldnt log out");
+                }
+            }
+        });
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

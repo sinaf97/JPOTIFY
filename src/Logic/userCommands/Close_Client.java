@@ -1,5 +1,6 @@
 package Logic.userCommands;
 
+import Logic.Status;
 import Logic.User;
 
 import java.io.IOException;
